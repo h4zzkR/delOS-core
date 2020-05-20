@@ -1,0 +1,3 @@
+[submodule "core/nlu/intent_classificator"]
+	path = core/nlu/intent_classificator
+	url = https://github.com/h4zzkR/bert_Intents_Classificator.git
