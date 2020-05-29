@@ -120,8 +120,7 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/python,visualstudiocode
 
-model/*
-model/checkpoint
-intents_cls_e2_bs32.data-00000-of-00002
-model/intents_cls_e2_bs32.data-00001-of-00002
-model/intents_cls_e2_bs32.index
+core/nlu/intent_classificator/model/*
+core/nlu/intent_classificator/model/checkpoint
+core/nlu/intent_classificator/model/intents_cls_e2_bs32.data-00001-of-00002
+core/nlu/intent_classificator/model/intents_cls_e2_bs32.index
