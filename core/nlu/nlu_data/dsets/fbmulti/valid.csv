@@ -1,4 +1,4 @@
-,intent_label,words,word_labels,length
+Unnamed: 0,intent_label,words,word_labels,length
 0,weather/find,tell me the weather report for half moon bay,O O O B-condition_description I-condition_description O B-geographic_poi I-geographic_poi I-geographic_poi,9
 1,weather/find,give me the latest forecast for half moon bay,O O O B-timeRange B-condition_description O B-geographic_poi I-geographic_poi I-geographic_poi,9
 2,weather/find,give me friday's forecast for half moon bay,O O B-timeRange B-condition_description O B-geographic_poi I-geographic_poi I-geographic_poi,8
@@ -518,7 +518,7 @@
 516,reminder/set_reminder,Remind me of my appointment tomorrow at 9 am,O O O O B-todo B-timeRange I-timeRange I-timeRange I-timeRange,9
 517,reminder/set_reminder,remind myself to buy bread,O O O B-todo I-todo,5
 518,reminder/set_reminder,Remind me of my next appointment,O O O O B-todo I-todo,6
-519,reminder/set_reminder,Add a reminder for blood work from Wednesday at 9am,O O B-reminder_type O B-todo I-todo B-O B-timeRange I-timeRange I-timeRange,10
+519,reminder/set_reminder,Add a reminder for blood work from Wednesday at 9am,O O B-reminder_type O B-todo I-todo O B-timeRange I-timeRange I-timeRange,10
 520,reminder/set_reminder,remind me of dentist appointment 2 weeks from today,O O O B-todo I-todo B-timeRange I-timeRange I-timeRange I-timeRange,9
 521,reminder/set_reminder,Remind me about the Farmer's Market this Saturday morning,O O O O O I-todo B-timeRange I-timeRange I-timeRange,9
 522,reminder/set_reminder,Remind me tomorrow of my 5pm doctor's appointment on Friday,O O B-timeRange O O B-todo O I-todo I-todo I-todo,10
@@ -976,7 +976,7 @@
 974,alarm/set_alarm,set an alarm for every 10 minutes for the next hour,O O O O I-timeRange I-timeRange I-timeRange I-timeRange I-timeRange I-timeRange I-timeRange,11
 975,alarm/set_alarm,Please set an alarm for midnight this Friday,O O O O B-timeRange I-timeRange I-timeRange I-timeRange,8
 976,alarm/set_alarm,set alarm for 4 Am,O O B-timeRange I-timeRange I-timeRange,5
-977,weather/find,did the news say it was going to rain today,O O B-O O O O O O B-condition_temperature B-timeRange,10
+977,weather/find,did the news say it was going to rain today,O O O O O O O O B-condition_temperature B-timeRange,10
 978,weather/find,Whats the name of the most recent hurricane,O O O O O O O B-condition_temperature,8
 979,weather/find,How much rain are we getting tonight,O O B-condition_temperature O O O B-timeRange,7
 980,weather/find,Can i expect any rain,O O O O B-condition_temperature,5
@@ -2002,7 +2002,7 @@
 2000,alarm/show_alarms,What alarm's do I have set for tomorrow,O O O O O O B-timeRange I-timeRange,8
 2001,reminder/set_reminder,remind me to get more diapers at the store tomorrow,O O O B-todo I-todo I-todo I-todo I-todo I-todo B-timeRange,10
 2002,reminder/set_reminder,Remind me to make macaroni and cheese for dinner tonight,O O O B-todo I-todo I-todo I-todo I-todo I-todo B-timeRange,10
-2003,reminder/set_reminder,Remind me to take out the chicken in 20 minutes,O O O B-O I-O I-O I-O B-timeRange I-timeRange I-timeRange,10
+2003,reminder/set_reminder,Remind me to take out the chicken in 20 minutes,O O O O O O O B-timeRange I-timeRange I-timeRange,10
 2004,reminder/set_reminder,Remind me to leave at 845am for the office,O O O B-todo I-todo I-todo I-todo I-todo I-todo,9
 2005,reminder/show_reminders,show me when my next reminder is,O O O O B-reference B-reminder_type O,7
 2006,alarm/set_alarm,Set an alarm for next week 5am,O O O B-timeRange I-timeRange I-timeRange I-timeRange,7
@@ -16264,7 +16264,7 @@
 16262,weather/find,Is it going to sleet this weekend?,O O O O B-condition_temperature B-timeRange I-timeRange O,8
 16263,alarm/set_alarm,set the new alarm for 8pm tonight,O O O O B-timeRange I-timeRange I-timeRange,7
 16264,alarm/set_alarm,Set an alarm for every hour for 4 hours.,O O O O I-timeRange I-timeRange I-timeRange I-timeRange I-timeRange O,10
-16265,reminder/set_reminder,Remind me to purchase my basketball tickets 2 hours from now.,O O O B-todo I-todo I-todo I-todo B-timeRange I-timeRange B-O O O,12
+16265,reminder/set_reminder,Remind me to purchase my basketball tickets 2 hours from now.,O O O B-todo I-todo I-todo I-todo B-timeRange I-timeRange O O O,12
 16266,reminder/set_reminder,remind me to call her back,O O O B-todo I-todo I-todo,6
 16267,reminder/cancel_reminder,Cancel my reminder to buy diapers,O O B-reminder_type O B-todo I-todo,6
 16268,reminder/set_reminder,Set a reminder for Avery's game.,O O O B-todo O I-todo O,7

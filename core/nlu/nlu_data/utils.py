@@ -12,8 +12,19 @@ def encode_dataset(tokenizer, text_sequences, max_length):
     Encode sequences with Bert-style tokenizer for inputting
     to the Bert layer.
     """
+    # max_length = 0
+    # for i, text_sequence in enumerate(text_sequences):
+    #     encoded = tokenizer.encode(text_sequence)
+    #     leng = len(encoded)
+    #     if leng > max_length:
+    #         print(text_sequence, len(text_sequence.split()))
+        # if leng > max_length:
+        #     max_length = leng
+    # max_length += max_length_step
+
     token_ids = np.zeros(shape=(len(text_sequences), max_length),
-                         dtype=np.int32)
+                        dtype=np.int32)
+
     for i, text_sequence in enumerate(text_sequences):
         encoded = tokenizer.encode(text_sequence)
         token_ids[i, 0:len(encoded)] = encoded
