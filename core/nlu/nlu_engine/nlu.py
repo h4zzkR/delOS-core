@@ -16,13 +16,12 @@ class IntentManager():
         pass
             
 
-
 class NLU():
     def __init__(self, model_name="bert-base-cased"):
         self.curdir = Path(__file__).parent.absolute()
         self.tokenizer = BertTokenizer.from_pretrained(model_name)
-        # bertbase = TFBertModel.from_pretrained(model_name)
-        bertbase = "bert-base-cased"
+        # TFBertBase hugging face transformers' gpu memory usage if efficiently and optimal.
+        bertbase = model_name
         d = DatasetLoader('merged') # TODO add here dataset param or join all dsets
         self.intent2id, self.id2intent = d.load_intents_map()
         self.tag2id, self.id2tag = d.load_tags_map()
@@ -83,5 +82,6 @@ class NLU():
 
 if __name__ == "__main__":
     nlu = NLU()
-    inp = input()
-    print(nlu(inp))
+    while True:
+        text = input()
+        print(nlu(text))

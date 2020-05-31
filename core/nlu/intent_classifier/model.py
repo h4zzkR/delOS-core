@@ -29,28 +29,3 @@ class RequestIntentClassifier():
         class_id = self.model(inputs).numpy().argmax(axis=1)[0]
         # return class_id
         return self.id2intent[class_id]
-
-
-
-if __name__ == "__main__":
-    import logging, os
-    logging.disable(logging.WARNING)
-    from transformers import TFBertModel, BertTokenizer
-    from ..nlu_data.utils import DatasetLoader
-    from ..semantic_taggers.tagger.model import SemanticTagsExtractor
-
-
-    d = DatasetLoader('merged')
-    intent2id, id2intent = d.load_intents_map()
-    tag2id, id2tag = d.load_tags_map()
-    bertbase = TFBertModel.from_pretrained('bert-base-cased')
-    # model = RequestIntentClassifier('bert-base-cased', id2intent)
-    semtag = SemanticTagsExtractor(bertbase, id2tag)
-    model = RequestIntentClassifier(bertbase, id2intent)
-    
-    # Tell me the weather forecast for here
-    tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-    while True:
-        text = input()
-        inp = tf.constant(tokenizer.encode(text))[None, :]  # batch_size = 1
-        print(model.classify(inp))
