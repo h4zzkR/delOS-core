@@ -9,11 +9,10 @@ class NLU():
         self.curdir = Path(__file__).parent.absolute()
         self.tokenizer = BertTokenizer.from_pretrained(model_name)
         bertbase = TFBertModel.from_pretrained(model_name)
-        d = DatasetLoader('merged')
+        d = DatasetLoader('merged') # TODO add here dataset param or join all dsets
         self.intent2id, self.id2intent = d.load_intents_map()
 
-        self.classifier = RequestIntentClassifier(
-                        self.tokenizer, bertbase, self.id2intent)
+        self.classifier = RequestIntentClassifier(bertbase, self.id2intent)
         self.tagger = None
 
     def __call__(self, text):
