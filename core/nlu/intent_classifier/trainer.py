@@ -30,8 +30,6 @@ parser.add_argument('--dataset', type=str, default='merged', help='Choose datase
 args = parser.parse_args()
 
 
-
-
 class ModelTrainer():
 
     def __init__(self, max_length, curdir, name='intents_classifier', dset_name='merged',
@@ -62,7 +60,7 @@ class ModelTrainer():
     def dataset_preload(self, dset_name, curdir, tokenizer, max_length):
         d = DatasetLoader(dset_name)
         df_train, df_valid, df_test, \
-                self.intent2id, self.id2intent, self.tag_map = d.load_prepare_dataset(curdir)
+                self.intent2id, self.id2intent, tag2id, id2tag = d.load_prepare_dataset(curdir)
         
         self.intent_train = df_train["intent_label"].map(self.intent2id).values
         self.intent_valid = df_valid["intent_label"].map(self.intent2id).values
@@ -97,7 +95,7 @@ if __name__ == "__main__":
     curdir = Path(__file__).parent.absolute()
     trainer = ModelTrainer(args.max_length,\
          curdir, bert_model_name=args.model_name, dset_name=args.dataset)
-    trainer.train(epochs=2, batch_size=32)
+    trainer.train(epochs=2, batch_size=16)
     model = trainer.model
     del trainer
     print(model)

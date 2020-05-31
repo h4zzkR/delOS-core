@@ -2,6 +2,8 @@ import logging
 import colorlog
 import os
 
+logging.disable(logging.WARNING)
+
 def init_logger(dunder_name, testing_mode, dir) -> logging.Logger:
     log_format = (
         '%(asctime)s - '

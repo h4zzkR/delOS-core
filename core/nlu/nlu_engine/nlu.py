@@ -1,6 +1,10 @@
+import logging, os
+logging.disable(logging.WARNING)
+
 import tensorflow as tf
 from pathlib import Path
-from ..intent_classificator.model import RequestIntentClassifier
+from ..intent_classifier.model import RequestIntentClassifier
+from ..semantic_taggers.tagger.model import SemanticTagsExtractor
 from ..nlu_data.utils import DatasetLoader, space_punct
 from transformers import TFBertModel, BertTokenizer
 
@@ -11,57 +15,59 @@ class NLU():
         bertbase = TFBertModel.from_pretrained(model_name)
         d = DatasetLoader('merged') # TODO add here dataset param or join all dsets
         self.intent2id, self.id2intent = d.load_intents_map()
+        self.tag2id, self.id2tag = d.load_tags_map()
 
         self.classifier = RequestIntentClassifier(bertbase, self.id2intent)
-        self.tagger = None
+        self.tagger = SemanticTagsExtractor(bertbase, self.id2tag)
+
+    def text_prep(self, text):
+        return space_punct(text)
 
     def __call__(self, text):
-        text = space_punct(text)
+        text = self.text_prep(text)
         inputs = tf.constant(self.tokenizer.encode(text))[None, :]  # batch_size = 1
 
-        intent = self.classifier.classify(inputs)
+        intent_id = self.classifier.classify(inputs)
+        tag_logits = self.tagger.tag(inputs)
+        tag_ids = tag_logits.numpy().argmax(axis=-1)[0, 1:-1]
 
-        # slot_logits, intent_logits = self.model(inputs)
-        # slot_ids = slot_logits.numpy().argmax(axis=-1)[0, 1:-1]
-        intent_id = intent_logits.numpy().argmax(axis=-1)[0]
+        return self.decode_predictions(text, intent_id, tag_ids)
 
-        return self.decode_predictions(text, intent, slot_ids)
-
-    def decode_predictions(self, text, intent_id, slot_ids):
+    def decode_predictions(self, text, intent_id, tag_ids):
         # TODO intent_id to intent
         """
         Model output to json-like data
-        {'intent' : name, 'slots' : {'a' : 'b'}}
+        {'intent' : name, 'tags' : {'a' : 'b'}}
         """
         info = {"intent": self.id2intent[intent_id]}
-        collected_slots = {}
-        active_slot_words = []
-        active_slot_name = None
+        collected_tags = {}
+        active_tag_words = []
+        active_tag_name = None
         for word in text.split():
             tokens = self.tokenizer.tokenize(word)
-            current_word_slot_ids = slot_ids[:len(tokens)]
-            slot_ids = slot_ids[len(tokens):]
-            current_word_slot_name = self.id2slot[current_word_slot_ids[0]]
-            if current_word_slot_name == "O":
-                if active_slot_name:
-                    collected_slots[active_slot_name] = " ".join(active_slot_words)
-                    active_slot_words = []
-                    active_slot_name = None
+            current_word_tag_ids = tag_ids[:len(tokens)]
+            tag_ids = tag_ids[len(tokens):]
+            current_word_tag_name = self.id2tag[current_word_tag_ids[0]]
+            if current_word_tag_name == "O":
+                if active_tag_name:
+                    collected_tags[active_tag_name] = " ".join(active_tag_words)
+                    active_tag_words = []
+                    active_tag_name = None
             else:
                 # Naive BIO: handling: treat B- and I- the same...
-                new_slot_name = current_word_slot_name[2:]
-                if active_slot_name is None:
-                    active_slot_words.append(word)
-                    active_slot_name = new_slot_name
-                elif new_slot_name == active_slot_name:
-                    active_slot_words.append(word)
+                new_tag_name = current_word_tag_name[2:]
+                if active_tag_name is None:
+                    active_tag_words.append(word)
+                    active_tag_name = new_tag_name
+                elif new_tag_name == active_tag_name:
+                    active_tag_words.append(word)
                 else:
-                    collected_slots[active_slot_name] = " ".join(active_slot_words)
-                    active_slot_words = [word]
-                    active_slot_name = new_slot_name
-        if active_slot_name:
-            collected_slots[active_slot_name] = " ".join(active_slot_words)
-        info["slots"] = collected_slots
+                    collected_tags[active_tag_name] = " ".join(active_tag_words)
+                    active_tag_words = [word]
+                    active_tag_name = new_tag_name
+        if active_tag_name:
+            collected_tags[active_tag_name] = " ".join(active_tag_words)
+        info["tags"] = collected_tags
         return info
 
 

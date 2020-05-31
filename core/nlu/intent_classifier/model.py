@@ -2,15 +2,13 @@ import os
 import tensorflow as tf
 from transformers import BertTokenizer
 from pathlib import Path
-from ..nlu_data.utils import space_punct
 from .base import RequestIntentClassifier as Classifier
 
 
 class RequestIntentClassifier():
-    def __init__(self, tokenizer, model_name, id2intent, load=True):
+    def __init__(self, model_name, id2intent, load=True):
 
         curdir = Path(__file__).parent.absolute()
-        self.tokenizer = tokenizer
         self.id2intent = id2intent
         intents_number = len(self.id2intent.keys())
 
@@ -29,7 +27,8 @@ class RequestIntentClassifier():
 
     def classify(self, inputs):
         class_id = self.model(inputs).numpy().argmax(axis=1)[0]
-        return self.id2intent[class_id]
+        return class_id
+        # return self.id2intent[class_id]
 
 
 
