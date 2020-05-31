@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling1D
 
 
 class RequestIntentClassifier(tf.keras.Model):
-    def __init__(self, bert_model, intent_num_labels=None, dropout_prob=0.1):
+    def __init__(self, bert_model, intent_num_labels=None, dropout_prob=0.2):
         super().__init__(name="intent_classificator")
         if isinstance(bert_model, str):
             self.bertbase = TFBertModel.from_pretrained(bert_model)

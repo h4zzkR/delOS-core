@@ -8,11 +8,21 @@ from ..semantic_taggers.tagger.model import SemanticTagsExtractor
 from ..nlu_data.utils import DatasetLoader, space_punct
 from transformers import TFBertModel, BertTokenizer
 
+class IntentManager():
+    def __init__(self):
+        pass
+
+    def __call__(self, intent, request):
+        pass
+            
+
+
 class NLU():
     def __init__(self, model_name="bert-base-cased"):
         self.curdir = Path(__file__).parent.absolute()
         self.tokenizer = BertTokenizer.from_pretrained(model_name)
-        bertbase = TFBertModel.from_pretrained(model_name)
+        # bertbase = TFBertModel.from_pretrained(model_name)
+        bertbase = "bert-base-cased"
         d = DatasetLoader('merged') # TODO add here dataset param or join all dsets
         self.intent2id, self.id2intent = d.load_intents_map()
         self.tag2id, self.id2tag = d.load_tags_map()
@@ -39,7 +49,7 @@ class NLU():
         Model output to json-like data
         {'intent' : name, 'tags' : {'a' : 'b'}}
         """
-        info = {"intent": self.id2intent[intent_id]}
+        info = {"intent": intent_id}
         collected_tags = {}
         active_tag_words = []
         active_tag_name = None
