@@ -37,13 +37,14 @@ class NLU():
         inputs = tf.constant(self.tokenizer.encode(text))[None, :]  # batch_size = 1
 
         intent_id = self.classifier.classify(inputs)
+
+        # add here
         tag_logits = self.tagger.tag(inputs)
         tag_ids = tag_logits.numpy().argmax(axis=-1)[0, 1:-1]
 
         return self.decode_predictions(text, intent_id, tag_ids)
 
     def decode_predictions(self, text, intent_id, tag_ids):
-        # TODO intent_id to intent
         """
         Model output to json-like data
         {'intent' : name, 'tags' : {'a' : 'b'}}
@@ -52,30 +53,30 @@ class NLU():
         collected_tags = {}
         active_tag_words = []
         active_tag_name = None
+        #   collect all tags from output
         for word in text.split():
             tokens = self.tokenizer.tokenize(word)
             current_word_tag_ids = tag_ids[:len(tokens)]
             tag_ids = tag_ids[len(tokens):]
             current_word_tag_name = self.id2tag[current_word_tag_ids[0]]
+
+            print(current_word_tag_name)
+
             if current_word_tag_name == "O":
-                if active_tag_name:
-                    collected_tags[active_tag_name] = " ".join(active_tag_words)
-                    active_tag_words = []
-                    active_tag_name = None
+                if active_tag_name: # sequence of tags separated with non-tag
+                    active_tag_name, active_tag_words = None, []
+                # else: start of sentence without any tags
             else:
-                # Naive BIO: handling: treat B- and I- the same...
-                new_tag_name = current_word_tag_name[2:]
-                if active_tag_name is None:
-                    active_tag_words.append(word)
-                    active_tag_name = new_tag_name
-                elif new_tag_name == active_tag_name:
-                    active_tag_words.append(word)
-                else:
-                    collected_tags[active_tag_name] = " ".join(active_tag_words)
-                    active_tag_words = [word]
-                    active_tag_name = new_tag_name
-        if active_tag_name:
-            collected_tags[active_tag_name] = " ".join(active_tag_words)
+                tag_name = current_word_tag_name[2:]
+                if active_tag_name is None or active_tag_name != tag_name: # new tag
+                    if tag_name in collected_tags.keys():
+                        collected_tags[tag_name].append(word)
+                    else:
+                        collected_tags.update({tag_name : [word]})
+                    active_tag_name = tag_name
+                elif active_tag_name == tag_name: # I-tag in sequence of tags
+                    collected_tags[tag_name][-1] += ' ' + word
+
         info["tags"] = collected_tags
         return info
 
