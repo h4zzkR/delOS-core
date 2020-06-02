@@ -13083,3 +13083,34 @@
 13081,SearchScreeningEvent,Showtimes for animated movies in the area .,O O B-movie_type I-movie_type B-spatial_relation I-spatial_relation I-spatial_relation O,8
 13082,SearchScreeningEvent,Which animated movies are playing at Megaplex Theatres at tea time?,O B-movie_type I-movie_type O O O B-location_name I-location_name O B-timeRange O,11
 13083,SearchScreeningEvent,What movie schedules start at sunset ?,O B-object_type I-object_type O O B-timeRange O,7
+13084,SetAlarm,Set an alarm for tomorrow at 7 am,B-condition_description O O B-timeRange I-timeRange O B-timeRange I-timeRange,8
+13085,SetAlarm,Set an alarm for today at 7 am,B-condition_description O O B-timeRange I-timeRange O B-timeRange I-timeRange,8
+13086,SetAlarm,Set an alarm for tomorrow at 8 am,B-condition_description O O B-timeRange I-timeRange O B-timeRange I-timeRange,8
+13087,SetAlarm,Set an alarm for tomorrow at 9 pm,B-condition_description O O B-timeRange I-timeRange O B-timeRange I-timeRange,8
+13088,SetAlarm,Set an alarm for today at 7 pm,B-condition_description O O B-timeRange I-timeRange O B-timeRange I-timeRange,8
+13089,SetAlarm,Set an alarm for tomorrow at 8 am,B-condition_description O O B-timeRange I-timeRange O B-timeRange I-timeRange,8
+13090,SetAlarm,Set an alarm for tomorrow at 10 pm,B-condition_description O O B-timeRange I-timeRange O B-timeRange I-timeRange,8
+13091,SetAlarm,Please set an alarm for tomorrow at 10 pm,O B-condition_description O O B-timeRange I-timeRange O B-timeRange I-timeRange,9
+13092,SetAlarm,Set an alarm,B-condition_description O O,3
+13093,SetAlarm,Set alarm,B-condition_description O,2
+13094,SetAlarm,Please set an alarm,O B-condition_description O O,4
+13095,SetAlarm,Alarm for tomorrow at 6 pm,O O B-timeRange O B-timeRange I-timeRange,6
+13096,SetAlarm,Alarm for tomorrow at 7 pm,O O B-timeRange O B-timeRange I-timeRange,6
+13097,SetAlarm,Set an alarm for every monday at 7 30 pm,B-condition_description O O O B-timeRange I-timeRange O B-timeRange I-timeRange I-timeRange,10
+13098,SetAlarm,Set an alarm for every tuesday at 7 30 pm,B-condition_description O O O B-timeRange I-timeRange O B-timeRange I-timeRange I-timeRange,10
+13099,SetAlarm,Set an alarm for every wednesday at 7 30 pm,B-condition_description O O O B-timeRange I-timeRange O B-timeRange I-timeRange I-timeRange,10
+13100,SetAlarm,Set an alarm for every thursday at 7 30 pm,B-condition_description O O O B-timeRange I-timeRange O B-timeRange I-timeRange I-timeRange,10
+13101,SetAlarm,Set an alarm for every friday at 7 30 pm,B-condition_description O O O B-timeRange I-timeRange O B-timeRange I-timeRange I-timeRange,10
+13102,SetAlarm,Set an alarm for every saturday at 7 30 pm,B-condition_description O O O B-timeRange I-timeRange O B-timeRange I-timeRange I-timeRange,10
+13103,SetAlarm,Set an alarm for every sunday at 7 30 pm,B-condition_description O O O B-timeRange I-timeRange O B-timeRange I-timeRange I-timeRange,10
+13104,SetAlarm,Set an alarm for monday at 8 30 am,B-condition_description O O O B-timeRange O B-timeRange I-timeRange I-timeRange,9
+13105,SetAlarm,Set an alarm for tuesday at 4 30 am,B-condition_description O O O B-timeRange O B-timeRange I-timeRange I-timeRange,9
+13106,SetAlarm,Set an alarm for wednesday at 6 30 pm,B-condition_description O O O B-timeRange O B-timeRange I-timeRange I-timeRange,9
+13107,SetAlarm,Set an alarm for thursday at 3 30 am,B-condition_description O O O B-timeRange O B-timeRange I-timeRange I-timeRange,9
+13108,SetAlarm,Set an alarm for friday at 7 30 pm,B-condition_description O O O B-timeRange O B-timeRange I-timeRange I-timeRange,9
+13108,SetAlarm,Set an alarm for friday at 3 30 pm,B-condition_description O O O B-timeRange O B-timeRange I-timeRange I-timeRange,9
+13108,SetAlarm,Alarm for friday at 7 30 pm,O O B-timeRange O B-timeRange I-timeRange I-timeRange,7
+13108,SetAlarm,Alarm for every friday at 7 15 pm,O O B-timeRange O B-timeRange I-timeRange I-timeRange,7
+13108,SetAlarm,Alarm for friday at 3 30 am,O O B-timeRange O B-timeRange I-timeRange I-timeRange,7
+13109,SetAlarm,Set an alarm for saturday at 7 30 pm,B-condition_description O O O B-timeRange O B-timeRange I-timeRange I-timeRange,9
+13110,SetAlarm,Set an alarm for sunday at 7 30 pm,B-condition_description O O O B-timeRange O B-timeRange I-timeRange I-timeRange,9
