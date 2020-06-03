@@ -2,7 +2,7 @@ import os
 import tensorflow as tf
 from transformers import BertTokenizer
 from pathlib import Path
-from .base import SemanticTagsExtractor as Tagger
+from .bert_model import BertSemanticTagsExtractor as Tagger
 
 
 class SemanticTagsExtractor():

@@ -1,11 +1,12 @@
+from .base_model import BaseClassifierModel
 import tensorflow as tf
 from transformers import TFBertModel, BertTokenizer
 from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling1D
 
 
-class RequestIntentClassifier(tf.keras.Model):
+class BertClassifierModel(BaseClassifierModel):
     def __init__(self, bert_model, intent_num_labels=None, dropout_prob=0.2):
-        super().__init__(name="intent_classificator")
+        super().__init__()
         if isinstance(bert_model, str):
             self.bertbase = TFBertModel.from_pretrained(bert_model)
         else:
