@@ -1,11 +1,12 @@
+from .base_model import SemanticTagsExtractor
 import tensorflow as tf
 from transformers import TFBertModel, BertTokenizer
 from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling1D
 
 
-class SemanticTagsExtractor(tf.keras.Model):
+class BertSemanticTagsExtractor(SemanticTagsExtractor):
     def __init__(self, bert_model, tag_num_labels=None, dropout_prob=0.1):
-        super().__init__(name='tag_extractor')
+        super().__init__()
         if isinstance(bert_model, str):
             self.bertbase = TFBertModel.from_pretrained(bert_model)
         else:

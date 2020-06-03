@@ -2,8 +2,9 @@ import os
 import tensorflow as tf
 from transformers import BertTokenizer
 from pathlib import Path
-from .base import RequestIntentClassifier as Classifier
+from .bert_model import BertClassifierModel as Classifier
 
+# not nearest future: add configs for various models
 
 class RequestIntentClassifier():
     def __init__(self, model_name, id2intent, load=True):
@@ -16,7 +17,6 @@ class RequestIntentClassifier():
 
         ckp_path = self.check_model(curdir)
         self.model.load_weights(ckp_path)
-
 
     def check_model(self, curdir):
         p = os.path.join(curdir, 'model/')

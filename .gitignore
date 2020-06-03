@@ -223,4 +223,4 @@ dmypy.json
 # End of https://www.gitignore.io/api/python,pycharm,jupyternotebooks,visualstudiocode
 
 core/nlu/intent_classifier/model/*
-core/nlu/semantic_taggers/tagger/model/*
+core/nlu/semantic_taggers/DefaultTagger/model/*
