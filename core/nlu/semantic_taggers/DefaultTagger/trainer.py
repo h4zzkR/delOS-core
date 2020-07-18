@@ -1,15 +1,11 @@
-# Do not forget to fucking run with -m prefix
-# and change '/' to '.'
-
-"""
-Intents classificator module trainer
-"""
 import pandas as pd
 from pathlib import Path
 import argparse
 import os
 import datetime
-from ...nlu_data.utils import DatasetLoader, encode_dataset, encode_token_labels
+from config import ROOT_DIR
+
+from ..tools.utils import DatasetLoader, space_punct
 from transformers import BertTokenizer
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.python.client import device_lib
@@ -19,7 +15,7 @@ from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from .base import SemanticTagsExtractor
 
 
-parser = argparse.ArgumentParser(description='Trainer for bert-based intent classificator')
+parser = argparse.ArgumentParser(description='Trainer for semantic tagger')
 parser.add_argument('--model-name', type=str, default='bert-base-cased')
 # solve problem with max length
 
@@ -32,17 +28,17 @@ args = parser.parse_args()
 
 class ModelTrainer():
 
-    def __init__(self, max_length, curdir, name='tag_extractor', dset_name='merged',
+    def __init__(self, max_length, name='tag_extractor', dset_name='merged',
                  bert_model_name="bert-base-cased", model_save_dir='model'):
 
         self.training_model = name
         tokenizer = BertTokenizer.from_pretrained(bert_model_name)
 
-        self.model_save_dir = os.path.join(curdir, model_save_dir)
+        self.model_save_dir = os.path.join(ROOT_DIR, model_save_dir)
         if not os.path.exists(self.model_save_dir):
             os.makedirs(self.model_save_dir)
 
-        self.dataset_preload(dset_name, curdir, tokenizer, max_length)
+        self.dataset_preload(dset_name, ROOT_DIR, tokenizer, max_length)
 
         self.model = SemanticTagsExtractor(
                     tag_num_labels=len(self.tag_map),
@@ -56,10 +52,10 @@ class ModelTrainer():
         self.model.compile(optimizer=opt, loss=loss, metrics=metrics)
 
 
-    def dataset_preload(self, dset_name, curdir, tokenizer, max_length):
+    def dataset_preload(self, dset_name, ROOT_DIR, tokenizer, max_length):
         d = DatasetLoader(dset_name)
         df_train, df_valid, df_test, \
-                intent2id, id2intent, self.tag2id, self.id2tag = d.load_prepare_dataset(curdir)
+                intent2id, id2intent, self.tag2id, self.id2tag = d.load_prepare_dataset(ROOT_DIR)
 
         print('Encoding data...')
         self.encoded_train = encode_dataset(tokenizer, df_train["words"], max_length)
@@ -97,10 +93,7 @@ class ModelTrainer():
 
 if __name__ == "__main__":
     # python -m core.nlu.semantic_taggers.tagger.trainer
-    curdir = Path(__file__).parent.absolute()
-    trainer = ModelTrainer(args.max_length,\
-         curdir, bert_model_name=args.model_name, dset_name=args.dataset)
+    trainer = ModelTrainer(args.max_length, \
+        bert_model_name=args.model_name, dset_name=args.dataset)
     trainer.train(epochs=2, batch_size=16)
     model = trainer.model
-    del trainer
-    print(model)
