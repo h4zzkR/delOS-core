@@ -1,1 +1,0 @@
-CONFIG = 'config.devel'
