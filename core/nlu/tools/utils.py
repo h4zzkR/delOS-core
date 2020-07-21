@@ -14,35 +14,35 @@ def space_punct(text):
 
 # TOOLS FOR STANDART DATASETS
 
-def encode_dataset(tokenizer, text_sequences, max_length):
-    """
-    Encode sequences with Bert-style tokenizer for inputting
-    to the Bert layer.
-    """
-    token_ids = np.zeros(shape=(len(text_sequences), max_length),
-                        dtype=np.int32)
+# def encode_dataset(tokenizer, text_sequences, max_length):
+#     """
+#     Encode sequences with Bert-style tokenizer for inputting
+#     to the Bert layer.
+#     """
+#     token_ids = np.zeros(shape=(len(text_sequences), max_length),
+#                         dtype=np.int32)
 
-    for i, text_sequence in enumerate(text_sequences):
-        encoded = tokenizer.encode(text_sequence)
-        token_ids[i, 0:len(encoded)] = encoded
-    attention_masks = (token_ids != 0).astype(np.int32)
-    return {"input_ids": token_ids, "attention_masks": attention_masks}
+#     for i, text_sequence in enumerate(text_sequences):
+#         encoded = tokenizer.encode(text_sequence)
+#         token_ids[i, 0:len(encoded)] = encoded
+#     attention_masks = (token_ids != 0).astype(np.int32)
+#     return {"input_ids": token_ids, "attention_masks": attention_masks}
 
-def encode_token_labels(text_sequences, tag_names, tokenizer, tag_map,
-                        max_length):
-    encoded = np.zeros(shape=(len(text_sequences), max_length), dtype=np.int32)
-    for i, (text_sequence, word_labels) in enumerate(
-            zip(text_sequences, tag_names)):
-        encoded_labels = []
-        for word, word_label in zip(text_sequence.split(), word_labels.split()):
-            tokens = tokenizer.tokenize(word)
-            encoded_labels.append(tag_map[word_label])
-            expand_label = word_label.replace("B-", "I-")
-            if not expand_label in tag_map:
-                expand_label = word_label
-            encoded_labels.extend([tag_map[expand_label]] * (len(tokens) - 1))
-        encoded[i, 1:len(encoded_labels) + 1] = encoded_labels
-    return encoded
+# def encode_token_labels(text_sequences, tag_names, tokenizer, tag_map,
+#                         max_length):
+#     encoded = np.zeros(shape=(len(text_sequences), max_length), dtype=np.int32)
+#     for i, (text_sequence, word_labels) in enumerate(
+#             zip(text_sequences, tag_names)):
+#         encoded_labels = []
+#         for word, word_label in zip(text_sequence.split(), word_labels.split()):
+#             tokens = tokenizer.tokenize(word)
+#             encoded_labels.append(tag_map[word_label])
+#             expand_label = word_label.replace("B-", "I-")
+#             if not expand_label in tag_map:
+#                 expand_label = word_label
+#             encoded_labels.extend([tag_map[expand_label]] * (len(tokens) - 1))
+#         encoded[i, 1:len(encoded_labels) + 1] = encoded_labels
+#     return encoded
 
 class DatasetLoader():
     def __init__(self, dset_name):
@@ -58,7 +58,6 @@ class DatasetLoader():
             df_valid = None
 
         intent2id, id2intent = self.load_intents_map()
-        print(intent2id, id2intent); sys.exit()
         tag2id, id2tag = self.load_tags_map()
         
         return df_train, df_valid, intent2id, id2intent, tag2id, id2tag
@@ -77,31 +76,9 @@ class DatasetLoader():
         return tag2id, id2tag
 
 
-    def dset2csv(self, dset_name=None):
-        """
-        From text file to csv. Run it once
-        """
-        lines_train = Path(
-            os.path.join(self.dset_dir, 'raw/train')
-            ).read_text().strip().splitlines()
-        lines_valid = Path(
-            os.path.join(self.dset_dir, 'raw/valid')
-            ).read_text().strip().splitlines()
-
-        parsed = [self.parse_line(line) for line in lines_train]
-
-        df_train = pd.DataFrame([p for p in parsed if p is not None])
-        df_valid = pd.DataFrame([self.parse_line(line) for line in lines_valid])
-
-        df_train.to_csv(os.path.join(self.dset_dir, 'train.csv'))
-        df_valid.to_csv(os.path.join(self.dset_dir, 'data/valid.csv'))
-
-
     def parse_line(self, line):
         """
         Parse this like:
-def space_punct(text):
-    return re.sub('(?<! )(?=[.,!?()])|(?<=[.,!?()])(?! )', r' ', text)
 
         'Add:O Don:B-entity_name and:I-entity_name Sherri:I-entity_name to:O 
         my:B-playlist_owner Meditate:B-playlist to:I-playlist Sounds:I-playlist

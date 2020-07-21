@@ -1,12 +1,20 @@
 import os
 from pathlib import Path
+from functional import read_config
 
 # package
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-CONFIG_DIR = os.path.join(ROOT_DIR, 'configuration.conf')
+CORE_DIR = os.path.join(ROOT_DIR, 'core')
+NLU_DIR = os.path.join(CORE_DIR, 'nlu')
+
+CONFIG_DIR = os.path.join(ROOT_DIR, 'config.py')
 PACKAGE_NAME = "delOS"
 DATA_PACKAGE_NAME = "data"
 DATA_PATH = os.path.join(ROOT_DIR, DATA_PACKAGE_NAME)
+
+CONFIG = read_config()
+NLU_CONFIG = CONFIG['nlu_engine']
+NER_CONFIG = CONFIG['ner_engine']
 
 # miscellaneous
 AUTOMATICALLY_EXTENSIBLE = "automatically_extensible"
