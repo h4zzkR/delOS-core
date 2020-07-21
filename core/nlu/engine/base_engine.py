@@ -3,29 +3,30 @@ from config import ROOT_DIR
 logging.disable(logging.WARNING)
 
 import tensorflow as tf
-from transformers import TFBertModel, BertTokenizer
 from ..tools.utils import DatasetLoader, space_punct
 from pathlib import Path
 
 class NLUEngine():
-    def __init__(self, model_name):
-        self.tokenizer = BertTokenizer.from_pretrained(model_name)
+    def __init__(self):
+        # TODO
+        pass
 
-    def text_prep(self, text):
+    def input_preprocess(self, text):
         return space_punct(text)
 
     def __call__(self, text):
         """
         Uses classificier and tagger to classify intents and extract tags from seq.
         """
-        text = self.text_prep(text)
-        inputs = tf.constant(self.tokenizer.encode(text))[None, :]  # batch_size = 1
+        text = self.input_preprocess(text)
+        inputs = tf.constant(self.featurizer.encode(text))[None, :]  # batch_size = 1
 
-        intent_id = self.classifier.classify(inputs) # id of intent class
-        tag_logits = self.tagger.tag(inputs)
-        tag_ids = tag_logits.numpy().argmax(axis=-1)[0, 1:-1] # logits of tags
+        intent_class = self.classifier.classify(inputs) # id of intent class
+        # tag_logits = self.tagger.tag(inputs)
+        # tag_ids = tag_logits.numpy().argmax(axis=-1)[0, 1:-1] # logits of tags
 
-        return self.decode_predictions(text, intent_id, tag_ids)
+        # return self.decode_predictions(text, intent_id, tag_ids)
+        return intent_class
 
     def decode_predictions(self, text, intent_id, tag_ids):
         """

@@ -11,14 +11,15 @@ parser = argparse.ArgumentParser(
     description='Tool that combines entities and intents for building datastet from human-friendly yaml'
     )
 parser.add_argument('--path2dset', type=str, default='data/nlu_data/custom/dataset.yaml')
-parser.add_argument('--path2write', type=str, default='data/nlu_data/custom/train.csv')
+parser.add_argument('--path2write', type=str, default='data/nlu_data/custom/')
 parser.add_argument('--max_synonyms', type=int, default=-1, help='Set the maximum of synonym numbers for one intent template')
+parser.add_argument("--rebuild_dataset", default=False, action="store_true")
 
 args = parser.parse_args()
 #TODO: убрать комбинации шаблонных, аугментации, мб на основе рандома решать, какие слоты заменять синонимами
 
 class DatasetBuilder:
-    def __init__(self, path2dset, max_synonyms, path2write=None, drop_stopwords=False):
+    def __init__(self, path2dset, max_synonyms, path2write=None, drop_stopwords=False, valid_prob=0.2):
         # TODO: add synonym augmentions
         # TODO: classes normalization: too many classes of ones
         self.path = Path(os.path.join(ROOT_DIR, path2dset))
@@ -26,6 +27,7 @@ class DatasetBuilder:
         self.max_synonyms = max_synonyms
         self.intent_vocab = []
         self.tag_vocab = []
+        self.valid_prob = valid_prob
 
     def write_intent_vocab(self):
         with open(os.path.join(self.path.parent, 'vocab.intent'), 'w') as file:
@@ -38,7 +40,7 @@ class DatasetBuilder:
                 file.write('B-' + i + '\n')
                 file.write('I-' + i + '\n')
 
-    def augment_intent(slot_map, intent):
+    def augment_intent(self, slot_map, intent):
         pass
 
         
@@ -50,12 +52,20 @@ class DatasetBuilder:
         processed_intents = self.read_slots_from_yaml(raw_intents)
         print('starting to combine entities...')
         df = self.build_combination_sequence(processed_intents)
-        print(f'{len(df)} unique examples builded')
+        length = len(df)
+        print(f'{length} unique examples builded')
         self.write_intent_vocab(); self.write_tag_vocab()
+        # Shuffle
+        df = df.sample(frac=1).reset_index(drop=True)
+
+        valid, train = df.loc[:int(self.valid_prob * length)], df.loc[int(self.valid_prob * length):]
         if self.out:
-            df.to_csv(self.out, index=False)
+            tp = os.path.join(self.out, 'train.csv')
+            vp = os.path.join(self.out, 'valid.csv')
+            train.to_csv(tp, index=False)
+            valid.to_csv(vp, index=False)
         else:
-            return df
+            return train, valid
         
     def read_yaml(self):
         with open(self.path) as file:

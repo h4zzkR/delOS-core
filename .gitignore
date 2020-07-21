@@ -226,6 +226,6 @@ core/nlu/intent_classifier/model/*
 core/nlu/intent_classifier/.model/*
 core/nlu/semantic_taggers/DefaultTagger/model/*
 core/nlu/semantic_taggers/DefaultTagger/.model/*
-data/nlu_data/*
-
-target/
+data/nlu_data/fbmulti/*
+data/nlu_data/snipsai/*
+data/nlu_data/merged/*
