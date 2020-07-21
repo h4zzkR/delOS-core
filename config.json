@@ -1,9 +1,10 @@
 {
     "nlu_engine": {
-      "featurizer_model": "bert-base-nli-mean-tokens",
+      "featurizer_model": "distilbert-base-nli-mean-tokens",
       "classifier_model": "dense_model",
-      "sem_tagger_model": "dense_model",
-      "intents_dataset": "data/nlu_data/custom"
+      "sem_tagger_model": "core/nlu/semantic_taggers/DefaultTagger/model/",
+      "intents_dataset": "data/nlu_data/snipsai",
+      "max_seq_length" : 45
     },
     "ner_engine": {
 

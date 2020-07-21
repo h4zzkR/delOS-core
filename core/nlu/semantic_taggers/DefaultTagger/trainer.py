@@ -1,99 +1,105 @@
 import pandas as pd
 from pathlib import Path
+import numpy as np
 import argparse
 import os
 import datetime
-from config import ROOT_DIR
+from config import NLU_DIR, ROOT_DIR, NLU_CONFIG
 
-from ..tools.utils import DatasetLoader, space_punct
-from transformers import BertTokenizer
+from ...tools.utils import DatasetLoader, encode_token_labels, encode_dataset
+from ...featurizers.transformer_featurizer import SentenceFeaturizer
+import tensorflow as tf
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.python.client import device_lib
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
-from .base import SemanticTagsExtractor
+from .dense_model import DenseTagsExtractor
+from ...tools.yaml2dataset import DatasetBuilder
 
 
-parser = argparse.ArgumentParser(description='Trainer for semantic tagger')
-parser.add_argument('--model-name', type=str, default='bert-base-cased')
+parser = argparse.ArgumentParser(description='Trainer for intent classificator')
 # solve problem with max length
-
-parser.add_argument('--max_length', type=int, default=49, help='Max tokens in sequence')
-parser.add_argument('--dataset', type=str, default='merged', help='Choose dataset dir for training')
-
+parser.add_argument('--dataset', type=str, default=NLU_CONFIG['intents_dataset'], help='Choose dataset dir for training')
+parser.add_argument("--rebuild_dataset", default=False, action="store_true")
 
 args = parser.parse_args()
 
 
 class ModelTrainer():
 
-    def __init__(self, max_length, name='tag_extractor', dset_name='merged',
-                 bert_model_name="bert-base-cased", model_save_dir='model'):
+    def __init__(self, rebuild_dataset, dset_name):
 
-        self.training_model = name
-        tokenizer = BertTokenizer.from_pretrained(bert_model_name)
-
-        self.model_save_dir = os.path.join(ROOT_DIR, model_save_dir)
+        self.model_save_dir = os.path.join(ROOT_DIR, NLU_CONFIG['sem_tagger_model'])
+        self.validate = True
         if not os.path.exists(self.model_save_dir):
             os.makedirs(self.model_save_dir)
 
-        self.dataset_preload(dset_name, ROOT_DIR, tokenizer, max_length)
+        self.featurizer = SentenceFeaturizer()
+        if rebuild_dataset:
+            dset = os.path.join(dset_name, 'dataset.yaml')
+            db = DatasetBuilder(dset, -1, dset_name)
+            db.build_dataset()
 
-        self.model = SemanticTagsExtractor(
-                    tag_num_labels=len(self.tag_map),
-                    bert_model=bert_model_name,
-                    )
+        self.dataset_preload(dset_name)
+        self.model = DenseTagsExtractor(len(self.id2tag))
+                    
 
-        opt = Adam(learning_rate=3e-5, epsilon=1e-08)
-        loss = SparseCategoricalCrossentropy(from_logits=True)
-        metrics = SparseCategoricalAccuracy('accuracy')
+        opt = Adam(learning_rate=0.001, epsilon=1e-09)
+        losses = [SparseCategoricalCrossentropy(from_logits=True)]
 
-        self.model.compile(optimizer=opt, loss=loss, metrics=metrics)
+        metrics = [SparseCategoricalAccuracy('accuracy')]
+        self.model.compile(optimizer=opt, loss=losses, metrics=metrics)
+
+    def encode_tokenize(self, seq):
+        encoded = encode_dataset(self.featurizer, seq).tolist()
+        encoded = self.featurizer.encode(
+            encoded, output_value='token_embeddings', convert_to_numpy=True, is_pretokenized=True
+        )
+        return np.array(encoded)
 
 
-    def dataset_preload(self, dset_name, ROOT_DIR, tokenizer, max_length):
+    def dataset_preload(self, dset_name):
         d = DatasetLoader(dset_name)
-        df_train, df_valid, df_test, \
-                intent2id, id2intent, self.tag2id, self.id2tag = d.load_prepare_dataset(ROOT_DIR)
+        df_train, df_valid, intent2id, id2intent, self.tag2id, self.id2tag = d.load_prepare_dataset()
+        if df_valid is None:
+            self.validate = False
+        self.encoded_seq_train = self.encode_tokenize(df_train['words'])
+        self.tag_train = encode_token_labels(df_train["words"], df_train["word_labels"], self.featurizer, self.tag2id)
 
-        print('Encoding data...')
-        self.encoded_train = encode_dataset(tokenizer, df_train["words"], max_length)
-        self.encoded_valid = encode_dataset(tokenizer, df_valid["words"], max_length)
-        self.encoded_test = encode_dataset(tokenizer, df_test["words"], max_length)
-        
-        self.tag_train = encode_token_labels(
-            df_train["words"], df_train["word_labels"], tokenizer, self.tag2id, max_length)
-        self.tag_valid = encode_token_labels(
-            df_valid["words"], df_valid["word_labels"], tokenizer, self.tag2id, max_length)
-        self.tag_test = encode_token_labels(
-            df_test["words"], df_test["word_labels"], tokenizer, self.tag2id, max_length)
+        if self.validate:
+            self.encoded_seq_valid = self.encode_tokenize(df_valid['words'])
+            self.tag_valid = encode_token_labels(
+                df_valid["words"], df_valid["word_labels"], self.featurizer, self.tag2id)
 
 
     def train(self, epochs, batch_size):
+
         time = datetime.datetime.now()
-        name = f"tags_extractor_e{epochs}_bs{batch_size}"
+        name = f"tag_extr_e{epochs}_bs{batch_size}"
 
         checkpoint_path = os.path.join(self.model_save_dir, name)
+        # print(self.encoded_seq_train.shape, self.tag_train.shape); sys.exit()
 
         # Create a callback that saves the model's weights
         cp_callback = ModelCheckpoint(filepath=checkpoint_path,
-                                        save_weights_onTaggery=True,
+                                        save_weights_only=True,
                                         verbose=1)
 
-
-        history = self.model.fit(self.encoded_train, self.tag_train,
-                        epochs=epochs, batch_size=batch_size,
-                        validation_data=(self.encoded_valid, self.tag_valid),
+        if self.validate:
+            history = self.model.fit(self.encoded_seq_train,
+                        self.tag_train, epochs=epochs, batch_size=batch_size,
+                        validation_data=(self.encoded_seq_valid, self.tag_valid),
                         callbacks=cp_callback)
-        return self.model
+        else:
+            history = self.model.fit(self.encoded_seq_train,
+                        self.tag_train, epochs=epochs, batch_size=batch_size,
+                        callbacks=cp_callback)
 
 
 
 
 if __name__ == "__main__":
-    # python -m core.nlu.semantic_taggers.tagger.trainer
-    trainer = ModelTrainer(args.max_length, \
-        bert_model_name=args.model_name, dset_name=args.dataset)
-    trainer.train(epochs=2, batch_size=16)
+    trainer = ModelTrainer(rebuild_dataset=args.rebuild_dataset, dset_name=args.dataset)
+    trainer.train(epochs=9, batch_size=32)
     model = trainer.model

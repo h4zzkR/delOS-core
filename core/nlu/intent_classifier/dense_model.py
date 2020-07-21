@@ -1,6 +1,6 @@
 from .base_model import BaseClassifierModel
 import tensorflow as tf
-from ..featurizers.transformer_featurizer import SenteceFeaturizer
+from ..featurizers.transformer_featurizer import SentenceFeaturizer
 from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling1D
 from tensorflow.keras.activations import softmax
 

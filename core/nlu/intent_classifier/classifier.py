@@ -29,7 +29,7 @@ class IntentClassifier():
         out = self.model(inputs)
         out = np.squeeze(np.array(out))
         class_id = np.argmax(out)
-        return self.id2intent[class_id]
+        return self.id2intent[class_id], out
 
 
 if __name__ == "__main__":

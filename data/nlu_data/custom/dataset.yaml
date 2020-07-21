@@ -1,0 +1,106 @@
+---
+intents:
+  - type: intent
+    name: turnLightOff
+    utterances:
+      - turn off the [location:room](bathroom) lights
+      - can you turn off the lights in the [location:room](garden) ?
+      - disable the illumination in the [location:room](kitchen) please
+      - shutdown the illumination in [location:room](bedroom)
+      - system , turn off the lightning in the [location:room](toilet)
+      - turn off the lights at the [location:room](stairs)
+      - can you turn off the light [location:current](here)
+      - turn off the lights [location:where_room](next door)
+      - swtich the [location:room](lounge)'s lights off please
+      - turn off the light
+      - hey , shutdown the lights
+      - disable lights please
+      - "[location:room](bedroom) , lights off"
+      - light off
+      - i command you to turn off the lights in the [location:room](toilet)
+      - system, light off
+      - off the lights
+      - turn off this lights
+      - turn down lights
+      - off light
+      - turn this fucking lights off !
+      - power off lights please
+      - turn off lights in [location:room](kitchen) and [location:room](basement)
+      - turn off the overhead lights in the [location:room](guest bedroom)
+      - turn off the lights [location:where_room](upstairs) in the [location:room](bedroom)
+      - turn off the house lights out in the [location:room](attic)
+      - turn off the lights coming in from the [location:room](hall)
+      - disable the house lights in across the [location:room](garage)
+      - cut the lights down in the [location:room](house)
+      - no lights on in the [location:room](office)
+      - also disable lights in the [location:room](dining room)
+
+  - type: intent
+    name: turnLightOn
+    utterances:
+      - turn on the [location:room](bathroom) light
+      - enable light in the [location:room](bedroom)
+      - enable the illumination in the [location:room](kitchen)
+      - activate lightning in the [location:room](bathroom)
+      - turn on light [location:where_room](upstairs)
+      - swtich the [location:room](garden)'s lights on
+      - give me some light in the [location:room](garage)
+      - it is dark [location:current](here)
+      - it is so dark [location:where_room](upstairs), turn light on
+      - make some light in [location:room](bathroom)
+      - the light has to be on first
+      - light on
+      - turn light on
+      - please, light on
+      - on light [location:current](here)
+      - so dark [location:where_room](downstairs)
+      - please make light [location:current](here)
+      - enable lights !
+      - enable lights [location:where_room](upstairs) and in the [location:room](basement)
+      - make light
+      - '[location:room](garden) is so dark'
+      - '[location:current](here) is dark too much'
+      - turn on all emergency room lights in the [location:room](garage)
+      - enable lights coming through the [location:room](lounge)
+      - switched on light in the [location:room](parking garage)
+      - turn the lights set in the [location:room](kitchen)
+      - turn the illumination
+      - turn back on lights in the [location:room](loft)
+      - turn on lights for the little [location:room](kitchen)
+      - enable electric lights inside the [location:room](office)
+      - also enable lights within the [location:room](lavatory)
+      - turn on lights in the spare [location:room](bedroom)
+
+entities:
+# turnOffLight Entity
+  - type: location
+    name: room
+    values:
+      - kitchen
+      - stairs
+      - garage
+      - [toilet, lavatory, restroom, loo]
+      - [bedroom, sleeping room]
+      - [dining room, cafeteria]
+      - [office, parlor, study room]
+      - [basement, cellar]
+      - [hall, hallway, corridor]
+      - [attic, loft, garret]
+      - [lounge, living room, salon]
+      - [house, home]
+
+# turnOffLight Entity
+  - type: location
+    name: where_room
+    allow_restrict: True
+    values:
+      - downstairs
+      - in the adjacent room
+      - [upstairs, upwards, above]
+      - [next door, near room]
+
+  - type: location
+    name: current
+    values:
+      - here
+      - in this room

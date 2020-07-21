@@ -3,7 +3,8 @@ from config import ROOT_DIR
 logging.disable(logging.WARNING)
 
 import tensorflow as tf
-from ..tools.utils import DatasetLoader, space_punct
+import numpy as np
+from ..tools.utils import DatasetLoader, space_punct, encode_dataset, encode_token_labels
 from pathlib import Path
 
 class NLUEngine():
@@ -19,16 +20,23 @@ class NLUEngine():
         Uses classificier and tagger to classify intents and extract tags from seq.
         """
         text = self.input_preprocess(text)
-        inputs = tf.constant(self.featurizer.encode(text))[None, :]  # batch_size = 1
+        embedded = tf.constant(self.featurizer.encode(text))[None, :]  # batch_size = 1
+        intent_class, probs = self.classifier.classify(embedded) # id of intent class
 
-        intent_class = self.classifier.classify(inputs) # id of intent class
-        # tag_logits = self.tagger.tag(inputs)
-        # tag_ids = tag_logits.numpy().argmax(axis=-1)[0, 1:-1] # logits of tags
+        embedded = tf.constant(self.encode_tokenize([text]))[None, :]
+        tags_classes = np.squeeze(np.squeeze(self.tagger.tag(embedded), 0), 0)
+        tag_ids = np.argmax(tags_classes, 1)[1:-1] # logits of tags
 
-        # return self.decode_predictions(text, intent_id, tag_ids)
-        return intent_class
+        return self.decode_predictions(text, intent_class, probs, tag_ids)
 
-    def decode_predictions(self, text, intent_id, tag_ids):
+    def encode_tokenize(self, seq):
+        encoded = encode_dataset(self.featurizer, seq).tolist()
+        encoded = self.featurizer.encode(
+            encoded, output_value='token_embeddings', convert_to_numpy=True, is_pretokenized=True
+        )
+        return np.array(encoded)
+
+    def decode_predictions(self, text, intent_id, intent_probs, tag_ids):
         """
         Tagger and classifier output to json-like data
         {'intent' : name, 'tags' : {'a' : 'b'}}
@@ -39,7 +47,7 @@ class NLUEngine():
         active_tag_name = None
         #   collect all tags from output
         for word in text.split():
-            tokens = self.tokenizer.tokenize(word)
+            tokens = self.featurizer.tokenize(word)
             current_word_tag_ids = tag_ids[:len(tokens)]
             tag_ids = tag_ids[len(tokens):]
             current_word_tag_name = self.id2tag[current_word_tag_ids[0]]
