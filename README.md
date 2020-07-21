@@ -2,16 +2,16 @@
 Attempts to build conceptual chat and voice assistant.
 
 # Intents detection (turnLightOn and turnLightOff)
-`> turn off light
-< turnLightOff
-> disable light in the garden
-< turnLightOff
-> light on in the kitchen
-< turnLightOn
-> enable illumintation
-< turnLightOn
-> switch off light
-< turnLightOff`
+`> turn off light <br>
+< turnLightOff <br>
+> disable light in the garden <br>
+< turnLightOff <br>
+> light on in the kitchen <br>
+< turnLightOn <br>
+> enable illumintation <br>
+< turnLightOn <br>
+> switch off light <br>
+< turnLightOff <br>`
 
 # Changelog
 - Added ability to learn from custom created yaml datasets with small count of examples
