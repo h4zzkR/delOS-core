@@ -3,7 +3,7 @@ import numpy as np
 import os
 import re
 from pathlib import Path
-from config import ROOT_DIR
+from config import ROOT_DIR, NLU_CONFIG
 
 
 def space_punct(text):
@@ -14,35 +14,28 @@ def space_punct(text):
 
 # TOOLS FOR STANDART DATASETS
 
-# def encode_dataset(tokenizer, text_sequences, max_length):
-#     """
-#     Encode sequences with Bert-style tokenizer for inputting
-#     to the Bert layer.
-#     """
-#     token_ids = np.zeros(shape=(len(text_sequences), max_length),
-#                         dtype=np.int32)
+def encode_token_labels(text_sequences, slot_names, featurizer, slot_map, max_length=NLU_CONFIG['max_seq_length']+2):
+    encoded = np.zeros(shape=(len(text_sequences), max_length), dtype=np.int32)
+    for i, (text_sequence, word_labels) in enumerate(zip(text_sequences, slot_names)):
+        encoded_labels = []
+        for word, word_label in zip(text_sequence.split(), word_labels.split()):
+            tokens = featurizer.tokenize(word)
+            encoded_labels.append(slot_map[word_label])
+            expand_label = word_label.replace("B-", "I-")
+            if not expand_label in slot_map:
+                expand_label = word_label
+            encoded_labels.extend([slot_map[expand_label]] * (len(tokens) - 1))
+        encoded[i, 1:len(encoded_labels) + 1] = encoded_labels
+    return encoded
 
-#     for i, text_sequence in enumerate(text_sequences):
-#         encoded = tokenizer.encode(text_sequence)
-#         token_ids[i, 0:len(encoded)] = encoded
-#     attention_masks = (token_ids != 0).astype(np.int32)
-#     return {"input_ids": token_ids, "attention_masks": attention_masks}
+def encode_dataset(featurizer, text_sequences, max_length=NLU_CONFIG['max_seq_length']):
+    token_ids = np.zeros(shape=(len(text_sequences), max_length),
+                         dtype=np.int32)
+    for i, text_sequence in enumerate(text_sequences):
+        encoded = featurizer.tokenize(text_sequence)
+        token_ids[i, 0:len(encoded)] = encoded
+    return token_ids
 
-# def encode_token_labels(text_sequences, tag_names, tokenizer, tag_map,
-#                         max_length):
-#     encoded = np.zeros(shape=(len(text_sequences), max_length), dtype=np.int32)
-#     for i, (text_sequence, word_labels) in enumerate(
-#             zip(text_sequences, tag_names)):
-#         encoded_labels = []
-#         for word, word_label in zip(text_sequence.split(), word_labels.split()):
-#             tokens = tokenizer.tokenize(word)
-#             encoded_labels.append(tag_map[word_label])
-#             expand_label = word_label.replace("B-", "I-")
-#             if not expand_label in tag_map:
-#                 expand_label = word_label
-#             encoded_labels.extend([tag_map[expand_label]] * (len(tokens) - 1))
-#         encoded[i, 1:len(encoded_labels) + 1] = encoded_labels
-#     return encoded
 
 class DatasetLoader():
     def __init__(self, dset_name):

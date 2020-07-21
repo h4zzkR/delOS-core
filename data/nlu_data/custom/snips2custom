@@ -1,0 +1,55 @@
+# BASEENTITIES
+
+snips/amountOfMoney
+snips/duration
+snips/number
+snips/ordinal
+snips/temperature
+snips/datetime
+snips/date
+snips/time
+snips/datePeriod
+snips/timePeriod
+snips/percentage
+
+album : musicAlbum
+artist : musicArtist
+track : musicSong
+genre : musicGenre
+music_item : musicItem # album, song, melody
+playlist : musicPlaylist
+playlist_owner: musicPlaylistOwner
+
+condition_description : weatherPhenomenon
+condition_temperature : weatherSenseOfTemperature
+
+city : locationCity
+country : locationCountry
+state : locationState
+current_location : locationCurrent
+poi : locationName
+geographic_poi : locationGeoPoi # ex: 
+location_name : locationName # ex: название театра, музея
+spatial_relation : spatialRelation # пространственное отношение ex: closest, nearest, around here
+object_location_type : locationType # ex: theatre, cinema
+
+object_name : objectName # названный объект, например, название фильма или сериала
+object_select : objectSelect # this, those, theese
+object_type : objectType # тип названного объект (Мона Лиза - картина, Лунная соната - мелодия)
+
+sort # ex: latest, newest, best
+
+service # название сервиса ex: youtube, vk, spotify
+
+timeRange # deprecated
+year : timeDate
+
+O # out of entities
+
+---
+
+entity_name : entityName
+facility # Дополнительное условие, удобство. Ex: Закажи номер в отеле с СПА
+restaurant_name : restaurantName # название ресторана и/или места приема пищи
+restaurant_type : restaurantType # тип ресторана и/или места приема пищи ex: taverna, pub, cafeteria
+served_dish : servedDish
