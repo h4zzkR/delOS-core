@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 from pathlib import Path
 import numpy as np
 import argparse
@@ -6,21 +7,20 @@ import os
 import datetime
 from config import NLU_DIR, ROOT_DIR, NLU_CONFIG
 
-from ...tools.utils import DatasetLoader, encode_token_labels, encode_dataset
+from ...tools.utils import TagsDatasetLoader as DatasetLoader
+from ...tools.utils import encode_token_labels, encode_dataset, dump
 from ...featurizers.transformer_featurizer import SentenceFeaturizer
 import tensorflow as tf
 from tensorflow.keras.callbacks import ModelCheckpoint
-from tensorflow.python.client import device_lib
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from .dense_model import DenseTagsExtractor
-from ...tools.yaml2dataset import DatasetBuilder
 
 
 parser = argparse.ArgumentParser(description='Trainer for intent classificator')
 # solve problem with max length
-parser.add_argument('--dataset', type=str, default=NLU_CONFIG['intents_dataset'], help='Choose dataset dir for training')
+parser.add_argument('--dataset', type=str, default=NLU_CONFIG['universal_tagger_dataset'], help='Choose dataset dir for training')
 parser.add_argument("--rebuild_dataset", default=False, action="store_true")
 
 args = parser.parse_args()
@@ -32,18 +32,22 @@ class ModelTrainer():
 
         self.model_save_dir = os.path.join(ROOT_DIR, NLU_CONFIG['sem_tagger_model'])
         self.validate = True
+
+        learning_rate, epsilon = 0.001, 1e-09
+        self.params = {'learning_rate' : learning_rate, 'epsilon' : epsilon,
+                        'dataset_name' : dset_name}
         if not os.path.exists(self.model_save_dir):
             os.makedirs(self.model_save_dir)
 
         self.featurizer = SentenceFeaturizer()
         if rebuild_dataset:
+            from ...tools.yaml2dataset import DatasetBuilder
             dset = os.path.join(dset_name, 'dataset.yaml')
             db = DatasetBuilder(dset, -1, dset_name)
             db.build_dataset()
 
         self.dataset_preload(dset_name)
         self.model = DenseTagsExtractor(len(self.id2tag))
-                    
 
         opt = Adam(learning_rate=0.001, epsilon=1e-09)
         losses = [SparseCategoricalCrossentropy(from_logits=True)]
@@ -72,6 +76,8 @@ class ModelTrainer():
             self.tag_valid = encode_token_labels(
                 df_valid["words"], df_valid["word_labels"], self.featurizer, self.tag2id)
 
+        self.params.update({'output_length' : len(self.tag2id)})
+
 
     def train(self, epochs, batch_size):
 
@@ -95,7 +101,8 @@ class ModelTrainer():
             history = self.model.fit(self.encoded_seq_train,
                         self.tag_train, epochs=epochs, batch_size=batch_size,
                         callbacks=cp_callback)
-
+        
+        dump(self.params, os.path.join(self.model_save_dir, 'params.json'))
 
 
 

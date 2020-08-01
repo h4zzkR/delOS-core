@@ -20,21 +20,14 @@ class NLUEngine():
         Uses classificier and tagger to classify intents and extract tags from seq.
         """
         text = self.input_preprocess(text)
-        embedded = tf.constant(self.featurizer.encode(text))[None, :]  # batch_size = 1
-        intent_class, probs = self.classifier.classify(embedded) # id of intent class
-
-        embedded = tf.constant(self.encode_tokenize([text]))[None, :]
-        tags_classes = np.squeeze(np.squeeze(self.tagger.tag(embedded), 0), 0)
+        # embedded = tf.constant(self.featurizer.encode(text))[None, :]  # batch_size = 1
+        enc_seq, pool_out = self.featurizer.featurize(text)
+        intent_class, probs = self.classifier.classify(pool_out) # id of intent class
+        tags_classes = self.tagger.tag(enc_seq)
         tag_ids = np.argmax(tags_classes, 1)[1:-1] # logits of tags
 
         return self.decode_predictions(text, intent_class, probs, tag_ids)
 
-    def encode_tokenize(self, seq):
-        encoded = encode_dataset(self.featurizer, seq).tolist()
-        encoded = self.featurizer.encode(
-            encoded, output_value='token_embeddings', convert_to_numpy=True, is_pretokenized=True
-        )
-        return np.array(encoded)
 
     def decode_predictions(self, text, intent_id, intent_probs, tag_ids):
         """
@@ -51,8 +44,6 @@ class NLUEngine():
             current_word_tag_ids = tag_ids[:len(tokens)]
             tag_ids = tag_ids[len(tokens):]
             current_word_tag_name = self.id2tag[current_word_tag_ids[0]]
-
-            # print(current_word_tag_name)
 
             if current_word_tag_name == "O":
                 if active_tag_name: # sequence of tags separated with non-tag

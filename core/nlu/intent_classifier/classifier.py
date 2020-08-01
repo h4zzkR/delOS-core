@@ -1,29 +1,35 @@
 import os
-from config import ROOT_DIR
+from config import ROOT_DIR, NLU_CONFIG
 import tensorflow as tf
 import numpy as np
 from pathlib import Path
 from .dense_model import DenseClassifierModel as Classifier
+from ..tools.utils import encode_dataset, jsonread, load_intents_map
 
 # not nearest future: add configs for various models
 
 class IntentClassifier():
-    def __init__(self, id2intent, model_name='dense', load=True):
+    def __init__(self, id2intent=None, load=True, path2model=None):
 
         self.id2intent = id2intent
-        intents_number = len(self.id2intent.keys())
+        if not path2model: path2model = NLU_CONFIG['classifier_model']
+        ckp_path, params = self.check_model(path2model)
+        self.dataset_name = params['dataset_name']
 
-        self.model = Classifier(intents_number)
+        if not self.id2intent:
+            self.id2intent = load_intents_map(self.dataset_name)
 
-        ckp_path = self.check_model()
+        self.intents_number = len(self.id2intent)
+        self.model = Classifier(self.intents_number)
         self.model.load_weights(ckp_path)
 
-    def check_model(self):
-        p = os.path.join(ROOT_DIR, 'core/nlu/intent_classifier/model/')
+    def check_model(self, path2model):
+        p = os.path.join(ROOT_DIR, path2model)
         ckp = Path(os.path.join(p, 'checkpoint')).read_text()
         m = ckp.splitlines()[0].split(': ')[-1]
+        params = jsonread(os.path.join(p, 'params.json'))
         p = os.path.join(p, m[1:-1])
-        return p
+        return p, params
 
     def classify(self, inputs):
         out = self.model(inputs)

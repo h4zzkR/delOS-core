@@ -11,7 +11,8 @@ from ..semantic_taggers.DefaultTagger.tagger import SemanticTagsExtractor
 class NLUEngine(NLUEngine):
     def __init__(self):
         super().__init__()
-        d = DatasetLoader(NLU_CONFIG['intents_dataset'])
+        d = DatasetLoader(NLU_CONFIG['intents_classificier_dataset'], 
+                            NLU_CONFIG['universal_tagger_dataset'])
         self.intent2id, self.id2intent = d.load_intents_map()
         self.tag2id, self.id2tag = d.load_tags_map()
         del d
