@@ -1,0 +1,266 @@
+{
+    "CancelAlarm": [
+        [
+            "Turn alarms off during the weekend",
+            "O O O B-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Turn off alarm for 8am tomorrow",
+            "O O O B-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Can you turn off my 4:30 AM alarm?",
+            "O O O O O B-timeRange I-timeRange O O"
+        ],
+        [
+            "Stop the 2 pm alarm for just today.",
+            "O B-timeRange I-timeRange I-timeRange O O O B-timeRange O"
+        ],
+        [
+            "cancel alarm for tomorrow at 8 am",
+            "O O B-timeRange I-timeRange I-timeRange I-timeRange I-timeRange"
+        ]
+    ],
+    "CancelReminder": [
+        [
+            "cancel the reminder for the bake sale",
+            "O O B-reminder_type O B-todo I-todo I-todo"
+        ],
+        [
+            "Cancel any reminders I've made for the week.",
+            "O O B-reminder_type O O O O O O"
+        ],
+        [
+            "Delete all reminders for Sunday",
+            "O O B-reminder_type B-timeRange I-timeRange"
+        ],
+        [
+            "remove reminder to do homework",
+            "O B-reminder_type O B-todo I-todo"
+        ],
+        [
+            "Cancel reminder to buy toilet paper",
+            "O B-reminder_type O B-todo I-todo I-todo"
+        ]
+    ],
+    "GetSunriseTime": [
+        [
+            "what time is the earlies a sunrise occurs",
+            "O O O O O O B-timeRange O"
+        ],
+        [
+            "What time will the sun rise",
+            "O O O O B-condition_temperature I-condition_temperature"
+        ],
+        [
+            "What time is sunrise tomorrow?",
+            "O O O B-timeRange I-timeRange O"
+        ],
+        [
+            "When's sunrise",
+            "O B-timeRange"
+        ],
+        [
+            "What time will the sun rise tomorrow?",
+            "O O O O B-condition_temperature I-condition_temperature B-timeRange O"
+        ]
+    ],
+    "GetSunsetTime": [
+        [
+            "At what time does the sun set in Maui tomorrow",
+            "O O O O O O O O O B-timeRange"
+        ],
+        [
+            "What time does the sun set in Houston today",
+            "O O O O O O O B-geographic_poi B-timeRange"
+        ],
+        [
+            "when does the sun set in California",
+            "O O O O O O B-geographic_poi"
+        ],
+        [
+            "what time is the sunset tonight",
+            "O O O B-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "when does the sun set today?",
+            "O O O B-condition_temperature I-condition_temperature B-timeRange O"
+        ]
+    ],
+    "GetWeather": [
+        [
+            "how much snow do we expect overnight",
+            "O O B-condition_temperature O O O B-timeRange"
+        ],
+        [
+            "Temperature today for Houston Celsius",
+            "B-condition_description B-timeRange O B-geographic_poi B-temperature_unit"
+        ],
+        [
+            "Are there any severe storm warning in my area today",
+            "O O O B-condition_description I-condition_description I-condition_description O B-geographic_poi I-geographic_poi B-timeRange"
+        ],
+        [
+            "What's the weekend weather?",
+            "O B-timeRange I-timeRange B-condition_description O"
+        ],
+        [
+            "Will it be below 75 in degree c inside tomorrow",
+            "O O O B-condition_temperature B-condition_temperature O B-condition_description B-temperature_unit B-geographic_poi B-timeRange"
+        ]
+    ],
+    "ModifyAlarm": [
+        [
+            "repeat alarm time everyday",
+            "O O O B-timeRange"
+        ],
+        [
+            "Change the alarm for Monday through Thursday from 6 a.m. to 7 a.m. Monday through Friday",
+            "O O O B-timeRange O O I-timeRange I-timeRange I-timeRange O O O O I-timeRange I-timeRange O O O O I-timeRange I-timeRange O"
+        ],
+        [
+            "Change tomorrows alarm for 30 minutes earlier",
+            "O B-timeRange O B-timeRange I-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Can you change the 6:00 am alarm to 8 for monday",
+            "O O O B-timeRange O I-timeRange O B-timeRange I-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "bump up all my alarms by 30 minutes",
+            "O O O O O B-timeRange I-timeRange I-timeRange"
+        ]
+    ],
+    "SetAlarm": [
+        [
+            "Set new alarm for 5 pm",
+            "O O O B-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Turn on my Sunday alarm.",
+            "O O O B-timeRange O O"
+        ],
+        [
+            "get me up at 5:30 am",
+            "O O O B-timeRange O I-timeRange"
+        ],
+        [
+            "Set alarm for noon next Wednesday",
+            "O O B-timeRange I-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Set my alarm for 2 hours from now",
+            "O O O B-timeRange I-timeRange I-timeRange I-timeRange I-timeRange"
+        ]
+    ],
+    "SetReminder": [
+        [
+            "remind me to stop at the supermarket today on the way home from work",
+            "O O O B-todo I-todo O I-todo B-timeRange O I-todo O O O O"
+        ],
+        [
+            "set a reminder for this weekend to buy a planner",
+            "O O B-reminder_type B-timeRange I-timeRange I-timeRange O B-todo I-todo I-todo"
+        ],
+        [
+            "Remind me to buy my mom a gift tomorrow.",
+            "O O O B-todo I-todo I-todo I-todo I-todo B-timeRange O"
+        ],
+        [
+            "Remind me that I'm fishing with dad on Saturday",
+            "O O O O B-todo I-todo I-todo B-timeRange I-timeRange"
+        ],
+        [
+            "remind me to make an appointment with the dentist tomorrow morning",
+            "O O O B-todo I-todo I-todo I-todo I-todo I-todo B-timeRange I-timeRange"
+        ]
+    ],
+    "ShowAlarms": [
+        [
+            "What is my alarm set for today?",
+            "O O O O O B-timeRange I-timeRange O"
+        ],
+        [
+            "What time will my alarm go off tomorrow?",
+            "O O O O O O O B-timeRange O"
+        ],
+        [
+            "Do I have an alarm set for tomorrow at 8am",
+            "O O O O O O B-timeRange I-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Show me all alarms for this weekend",
+            "O O O O B-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Do I have any alarms set today?",
+            "O O O O O O B-timeRange O"
+        ]
+    ],
+    "ShowReminders": [
+        [
+            "what reminders do I have for today?",
+            "O B-reminder_type O O O B-timeRange I-timeRange O"
+        ],
+        [
+            "SHOW MY REMINDERS FOR TODAY.",
+            "O O B-reminder_type B-timeRange I-timeRange O"
+        ],
+        [
+            "list my reminders",
+            "O O B-reminder_type"
+        ],
+        [
+            "show my doctor reminder",
+            "O O B-todo B-reminder_type"
+        ],
+        [
+            "When did I set a reminder for the client meeting today?",
+            "O O O O O B-reminder_type O O B-todo I-todo B-timeRange O"
+        ]
+    ],
+    "SnoozeAlarm": [
+        [
+            "Snooze my alarm for fifteen minutes.",
+            "O O O B-timeRange I-timeRange I-timeRange O"
+        ],
+        [
+            "set Snooze alarm for 20 minutes",
+            "O O O B-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Snooze for 20 minutes",
+            "O B-timeRange I-timeRange I-timeRange"
+        ],
+        [
+            "Set my snooze for 15 minutes.",
+            "O O O B-timeRange I-timeRange I-timeRange O"
+        ],
+        [
+            "Snooze alarm for 10 minutes",
+            "O O B-timeRange I-timeRange I-timeRange"
+        ]
+    ],
+    "TimeLeftAlarm": [
+        [
+            "How many hours until my morning alarm goes off",
+            "O O O O O B-timeRange O O O"
+        ],
+        [
+            "How much time until 7 am alarm?",
+            "O O O B-timeRange I-timeRange I-timeRange O O"
+        ],
+        [
+            "How much time is left of today's alarm",
+            "O O O O O B-timeRange I-timeRange O"
+        ],
+        [
+            "how much time do I have left of my 20 minute alarm",
+            "O O O O O O O O O B-timeRange I-timeRange O"
+        ],
+        [
+            "how many hours until for 6 am alarm",
+            "O O O B-timeRange I-timeRange I-timeRange I-timeRange O"
+        ]
+    ]
+}
