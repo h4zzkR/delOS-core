@@ -1,14 +1,13 @@
 intent_label,words,word_labels,length
-turnLightOff,turn off the light,O O O O,4
-turnLightOn,light on,O O,2
-turnLightOn,switched on light in the parking garage,O O O O O B-location:room I-location:room,7
-turnLightOn,enable light in the bedroom,O O O O B-location:room,5
-turnLightOn,here is dark too much,B-location:current O O O O,5
-turnLightOff,turn off the lights coming in from the hall,O O O O O O O O B-location:room,9
-turnLightOn,the light has to be on first,O O O O O O O,7
-turnLightOff,off the lights,O O O,3
-turnLightOn,turn on lights in the spare bedroom,O O O O O O B-location:room,7
-turnLightOff,disable the illumination in the kitchen please,O O O O O B-location:room O,7
-turnLightOff,no lights on in the office,O O O O O B-location:room,6
-turnLightOn,turn back on lights in the loft,O O O O O O B-location:room,7
 turnLightOn,it is dark here,O O O B-location:current,4
+turnLightOff,off the lights,O O O,3
+turnLightOn,turn back on lights in the loft,O O O O O O B-location:room,7
+turnLightOn,enable lights upstairs and in the basement,O O B-location:where_room O O O B-location:room,7
+turnLightOff,power off lights please,O O O O,4
+turnLightOn,garden is so dark,B-location:room O O O,4
+turnLightOff,turn off the lights upstairs in the bedroom,O O O O B-location:where_room O O B-location:room,8
+turnLightOn,make some light in bathroom,O O O O B-location:room,5
+turnLightOff,turn off the bathroom lights,O O O B-location:room O,5
+turnLightOn,turn on lights for the little kitchen,O O O O O O B-location:room,7
+turnLightOff,swtich the lounge's lights off please,O O B-location:room O O O,6
+turnLightOn,turn the lights set in the kitchen,O O O O O O B-location:room,7

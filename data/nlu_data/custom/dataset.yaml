@@ -20,13 +20,15 @@ intents:
       - i command you to turn off the lights in the [location:room](toilet)
       - system, light off
       - off the lights
-      - turn off this lights
+      - disable light at [location:room](home)
+      - disable lights in [location:room](kitchen) please
       - turn down lights
       - off light
       - turn this fucking lights off !
       - power off lights please
+      - disable this lights in the [location:room](yard)
       - turn off lights in [location:room](kitchen) and [location:room](basement)
-      - turn off the overhead lights in the [location:room](guest bedroom)
+      - disable light in the [location:room](dining room)
       - turn off the lights [location:where_room](upstairs) in the [location:room](bedroom)
       - turn off the house lights out in the [location:room](attic)
       - turn off the lights coming in from the [location:room](hall)
@@ -92,7 +94,7 @@ entities:
 # turnOffLight Entity
   - type: location
     name: where_room
-    allow_restrict: True
+    replace_synonyms: True
     values:
       - downstairs
       - in the adjacent room
