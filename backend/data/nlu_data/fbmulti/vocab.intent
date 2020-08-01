@@ -1,0 +1,12 @@
+GetWeather
+SetAlarm
+SetReminder
+ModifyAlarm
+GetSunriseTime
+GetSunsetTime
+SnoozeAlarm
+ShowReminders
+CancelReminder
+CancelAlarm
+TimeLeftAlarm
+ShowAlarms
