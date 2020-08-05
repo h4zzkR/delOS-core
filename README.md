@@ -1,7 +1,8 @@
 # delOS AI prealpha system
 Attempts to build conceptual chat and voice assistant.
 
-# Intents detection (turnLightOn and turnLightOff)
+# Intents detection (turnLightOn and turnLightOff example)
+# Will be more intents in future with an ability to add custom data
 `
 > turn off light <br>
 < turnLightOff <br>
