@@ -1,6 +1,7 @@
 import os
 from abc import abstractmethod
 from backend.functional import tf_set_memory_growth
+# help text from snips nlu
 
 class NLUEngine():
     """Abstraction which performs input intent parsing
@@ -10,7 +11,7 @@ class NLUEngine():
 
     @abstractmethod
     def fit(self, dataset, force_retrain):
-        """Fit the intent parser with a valid dataset
+        """Fit the intent classifier and taggers with a valid dataset
 
         Args:
             dataset (dict): valid dataset
@@ -20,7 +21,17 @@ class NLUEngine():
         pass
 
     @abstractmethod
-    def parse(self, text, intents, top_n):
+    def eval(self, dataset):
+        """
+        Switch to predict mode (load some modules which not needed in fit mode)
+
+        Args:
+            dataset (string): relative path to dataset in data/nlu_data
+        """
+        pass
+
+    @abstractmethod
+    def parse(self, text, top_n, intents=None):
         """Performs intent parsing on the provided *text*
 
         Args:
@@ -57,7 +68,7 @@ class NLUEngine():
         pass
 
     @abstractmethod
-    def decode_outputs(self, intents_logits, tags_logits):
+    def build_result(self, intents_logits, tags_logits):
         """Tagger and classifier output to json-like data:
         {'intent' : name, 'tags' : {'a' : 'b'}}
         """

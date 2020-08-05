@@ -84,7 +84,6 @@ class DatasetLoader():
         if dset_name is not None:
             self.dset_tags_dir = os.path.join(ROOT_DIR, dset_name)
         tag_names = Path(os.path.join(self.dset_tags_dir, "vocab.tag")).read_text().strip().splitlines()
-        tag_map = {}
         tag2id = dict((label, idx) for idx, label in enumerate(tag_names))
         id2tag = {tag2id[i] : i for i in tag2id.keys()}
         return tag2id, id2tag
@@ -151,6 +150,21 @@ def load_tags_map(tags_dset_name):
     d = DatasetLoader(dset_intents_name=tags_dset_name)
     return d.load_tags_map()
 
+def load_id2intent(dset_name):
+    if dset_name is not None:
+        dset_intents_dir = os.path.join(ROOT_DIR, dset_name)
+    intent_names = Path(os.path.join(dset_intents_dir, "vocab.intent")).read_text().split()
+    id2intent = dict((idx, label) for idx, label in enumerate(intent_names))
+    return id2intent
+
+def load_id2tag(dset_name):
+    if dset_name is not None:
+        dset_tags_dir = os.path.join(ROOT_DIR, dset_name)
+    tag_names = Path(os.path.join(dset_tags_dir, "vocab.tag")).read_text().strip().splitlines()
+    id2tag = dict((idx, label) for idx, label in enumerate(tag_names))
+    return id2tag
+
+
 def load_map(self, text_vocab_path):
     """
     Path to the vocab.__entity_name__
@@ -165,6 +179,17 @@ def load_map(self, text_vocab_path):
     return ent2id, id2ent
 
 # END OF TOOLS FOR STANDART DATASETS
+
+def get_all_intents(dataset):
+    intents_vocab_list = []
+    dataset = os.path.join(ROOT_DIR, dataset, 'vocab.intent')
+    with open(dataset, 'r') as file:
+        for i in file.readlines():
+            intents_vocab_list.append(i.replace('\n', ''))
+    return intents_vocab_list
+    
+
+# DEPRECATED
 
 def search_all_intents():
     print(ROOT_DIR)
@@ -186,13 +211,7 @@ def search_all_intents():
                 i += '\n'
             file.write(i)
 
-def get_all_intents():
-    intents_vocab_list = []
-    with open(os.path.join(ROOT_DIR, 'core/nlu/intent_manager/vocab.intent'), 'r') as file:
-        for i in file.readlines():
-            intents_vocab_list.append(i.replace('\n', ''))
-    return intents_vocab_list
-    
+
 def map_all_intents():
     ilist = get_all_intents()
     imap = {}

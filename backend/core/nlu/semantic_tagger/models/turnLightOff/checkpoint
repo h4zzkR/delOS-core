@@ -1,0 +1,2 @@
+model_checkpoint_path: "turnLightOff_model"
+all_model_checkpoint_paths: "turnLightOff_model"

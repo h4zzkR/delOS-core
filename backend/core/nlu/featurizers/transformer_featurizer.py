@@ -12,6 +12,9 @@ class SentenceTransformerExtended(SentenceTransformer):
     def __init__(self, model_name_or_path: str = None, modules: Iterable[nn.Module] = None, device: str = 'cuda'):
         super().__init__(model_name_or_path, modules, device)
 
+    def decode(self, text):
+        return self._first_module().tokenizer.decode(text)
+
     def featurize(self, sentences: Union[str, List[str], List[int]], batch_size: int = 8, \
                 convert_to_numpy: bool = True, convert_to_tensor: bool = False, \
                 is_pretokenized: bool = False) -> List[ndarray]:
@@ -89,6 +92,9 @@ class SentenceFeaturizer():
     def encode(self, inputs, **kwargs):
         return np.array(self.featurizer.encode(inputs, **kwargs))
 
+    def decode(self, inputs, **kwargs):
+        return self.featurizer.decode(inputs, **kwargs)
+
     def tokenize(self, inputs):
         return np.array(self.featurizer.tokenize(inputs))
 
@@ -101,6 +107,6 @@ class SentenceFeaturizer():
 
     def featurize(self, inputs):
         seq = self.encode_dataset([inputs]).tolist()
-        pooled_out, encoded_seq = list(map(lambda i: tf.constant(i[None, :]), \
+        pooled_out, encoded_seq = list(map(lambda i: tf.constant(i)[None, :], \
                                     self.featurizer.featurize(seq, convert_to_numpy=True, is_pretokenized=True)))
-        return encoded_seq, pooled_out
+        return seq, encoded_seq, pooled_out

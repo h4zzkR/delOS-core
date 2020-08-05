@@ -6,7 +6,7 @@
     "intent_classifier_base_model" : "dense",
     "intents_classificier_dataset": "data/nlu_data/custom",
     "max_seq_length" : 45,
-    "universal_tagger_dataset": "data/nlu_data/custom",
+    "universal_dataset": "data/nlu_data/custom",
     "text_processor" : "core/text_processors/default"
   },
   "ner_engine": {
