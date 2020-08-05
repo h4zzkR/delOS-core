@@ -95,7 +95,8 @@ class ProbabilisticNLUEngine(NLUEngine):
 
     def mixin_builtin_tags(self, result, builtin_tags):
         if builtin_tags is not None:
-            return result['tags'].update(builtin_tags)
+            result['tags'].update(builtin_tags)
+        return result
 
     def top_n_intent_names(self, probs):
         return np.argsort(probs)
@@ -119,7 +120,8 @@ class ProbabilisticNLUEngine(NLUEngine):
                 tags_logits = self.taggers[intent_name].tag(enc_seq)
             else:
                 tags_logits = None
-            return self.build_result(text, intent_name, tags_logits)
+            return self.mixin_builtin_tags(self.build_result(text, intent_name, tags_logits), \
+                builtin_tags)
 
         results = []
         _, probs = self.intent_classifier.classify(pool_out)
@@ -137,5 +139,5 @@ if __name__ == "__main__":
     obj = ProbabilisticNLUEngine()
     obj.fit('data/nlu_data/custom')
     obj.eval()
-    print(obj.parse('buy milk for 2.5 dollars'))
+    print(obj.parse('turn off the lights in the kitchen'))
     # obj.load('intent')
