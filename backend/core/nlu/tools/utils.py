@@ -126,16 +126,9 @@ class IntentsDatasetLoader(DatasetLoader):
 
         intent2id, id2intent = self.load_intents_map()
 
-        df_train = pd.read_csv(os.path.join(self.dset_intents_dir, 'train.csv'))
-        y_train = df_train["intent_label"].map(intent2id).values
-        try:
-            df_valid = pd.read_csv(os.path.join(self.dset_intents_dir, 'valid.csv'))
-            y_valid = df_valid["intent_label"].map(intent2id).values
-        except FileNotFoundError:
-            df_valid = None
-            y_valid = None
+        df = pd.read_csv(os.path.join(self.dset_intents_dir, 'train.csv'))
         
-        return df_train, y_train, df_valid, y_valid, intent2id, id2intent, None, None
+        return df, intent2id, id2intent, None, None
 
 class TagsDatasetLoader(DatasetLoader):
     def __init__(self, dset_intents_name, dset_tags_name=None):
@@ -145,14 +138,10 @@ class TagsDatasetLoader(DatasetLoader):
         print('Loading data...')
 
         tag2id, id2tag = self.load_tags_map()
+        intent2id, id2intent = self.load_intents_map()
 
-        df_train = pd.read_csv(os.path.join(self.dset_tags_dir, 'train.csv'))
-        try:
-            df_valid = pd.read_csv(os.path.join(self.dset_tags_dir, 'valid.csv'))
-        except FileNotFoundError:
-            df_valid = None
-        
-        return df_train, df_valid, None, None, tag2id, id2tag
+        df= pd.read_csv(os.path.join(self.dset_tags_dir, 'train.csv'))
+        return df, intent2id, id2intent, tag2id, id2tag
 
 def load_intents_map(intents_dset_name):
     d = DatasetLoader(dset_intents_name=intents_dset_name)
