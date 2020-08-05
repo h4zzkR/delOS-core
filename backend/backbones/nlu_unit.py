@@ -1,6 +1,6 @@
 import os
 from abc import ABCMeta, abstractmethod, abstractproperty
-from backend.config import MODELS_PARAMS
+from backend.config import MODELS_FIT_PARAMS
 
 class ModuleUnit():
     def __init__(self, model_name, random_state=42):

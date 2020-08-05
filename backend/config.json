@@ -1,8 +1,9 @@
 {
   "nlu_engine": {
     "featurizer_model": "distilbert-base-nli-mean-tokens",
-    "classifier_model": "core/nlu/intent_classifier/model/",
+    "classifier_model": "core/nlu/intent_classifier/model/classifier",
     "semantic_tagger_base_model" : "dense",
+    "intent_classifier_base_model" : "dense",
     "intents_classificier_dataset": "data/nlu_data/custom",
     "max_seq_length" : 45,
     "universal_tagger_dataset": "data/nlu_data/custom",

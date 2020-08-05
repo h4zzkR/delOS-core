@@ -5,7 +5,7 @@ import argparse
 import re
 import pandas as pd
 from pathlib import Path
-from config import ROOT_DIR, INTENTS, ENTITIES, UTTERANCES
+from backend.config import ROOT_DIR, INTENTS, ENTITIES, UTTERANCES
 
 parser = argparse.ArgumentParser(
     description='Tool that combines entities and intents for building datastet from human-friendly yaml'
@@ -19,9 +19,9 @@ args = parser.parse_args()
 #TODO: убрать комбинации шаблонных, аугментации, мб на основе рандома решать, какие слоты заменять синонимами
 
 class DatasetBuilder:
-    def __init__(self, path2dset, max_synonyms, path2write=None, drop_stopwords=False, valid_prob=0.2):
+    def __init__(self, path2dset, max_synonyms, path2write=None, drop_stopwords=False, valid_prob=1):
         # TODO: add synonym augmentions
-        # TODO: classes normalization: too many classes of ones
+        # TODO: remove train_test split
         self.path = Path(os.path.join(ROOT_DIR, path2dset))
         self.out = os.path.join(ROOT_DIR, path2write)
         self.max_synonyms = max_synonyms

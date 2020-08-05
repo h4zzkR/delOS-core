@@ -1,9 +1,0 @@
-{
-    "semantic_tagger_base_model" : {
-        "from_logits" : true,
-        "learning_rate" : 0.001,
-        "epsilon" : 1e-09,
-        "batch_size" : 32,
-        "epochs" : 9
-    }
-} 

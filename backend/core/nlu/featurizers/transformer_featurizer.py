@@ -9,7 +9,7 @@ from sentence_transformers import SentenceTransformer, models
 from ..tools.utils import encode_dataset
 
 class SentenceTransformerExtended(SentenceTransformer):
-    def __init__(self, model_name_or_path: str = None, modules: Iterable[nn.Module] = None, device: str = None):
+    def __init__(self, model_name_or_path: str = None, modules: Iterable[nn.Module] = None, device: str = 'cuda'):
         super().__init__(model_name_or_path, modules, device)
 
     def featurize(self, sentences: Union[str, List[str], List[int]], batch_size: int = 8, \
@@ -101,6 +101,6 @@ class SentenceFeaturizer():
 
     def featurize(self, inputs):
         seq = self.encode_dataset([inputs]).tolist()
-        pooled_out, encoded_seq = list(map(lambda i: tf.constant(i)[None, :], \
+        pooled_out, encoded_seq = list(map(lambda i: tf.constant(i[None, :]), \
                                     self.featurizer.featurize(seq, convert_to_numpy=True, is_pretokenized=True)))
         return encoded_seq, pooled_out

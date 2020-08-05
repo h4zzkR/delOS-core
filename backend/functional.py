@@ -1,4 +1,5 @@
 import os, sys, json
+import tensorflow as tf
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def read_config():
@@ -7,3 +8,11 @@ def read_config():
 
     return data
     
+def tf_set_memory_growth():
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+        except RuntimeError as e:
+            print(e)

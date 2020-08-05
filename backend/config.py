@@ -8,6 +8,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(ROOT_DIR, 'core')
 NLU_DIR = os.path.join(CORE_DIR, 'nlu')
 TAGGER_DIR = os.path.join(NLU_DIR, 'semantic_tagger')
+CLASSIFIER_DIR = os.path.join(NLU_DIR, 'intent_classifier')
 IMAP_PATH = os.path.join(NLU_DIR, 'tag_intent_manager/taggers_map.json')
 
 CONFIG_DIR = os.path.join(ROOT_DIR, 'config.py')
@@ -20,7 +21,7 @@ NLU_CONFIG = CONFIG['nlu_engine']
 NER_CONFIG = CONFIG['ner_engine']
 
 # MODELLING
-MODELS_PARAMS = os.path.join(ROOT_DIR, 'configs/model_params.json')
+MODELS_FIT_PARAMS = os.path.join(ROOT_DIR, 'configs/models_fit_params.json')
 
 # miscellaneous
 BUILTIN_ENTITY_TAGGER = "builtin_entity_tagger"
