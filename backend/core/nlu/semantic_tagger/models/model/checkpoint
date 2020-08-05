@@ -1,2 +1,0 @@
-model_checkpoint_path: "tag_extr_e9_bs32"
-all_model_checkpoint_paths: "tag_extr_e9_bs32"

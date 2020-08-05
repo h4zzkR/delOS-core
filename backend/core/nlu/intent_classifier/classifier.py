@@ -22,6 +22,7 @@ class IntentClassifier(ModuleUnit):
         super().__init__(model_name)
         self.base_model_ = 'intent_classifier_base_model'
         self.model_dir = os.path.join(CLASSIFIER_DIR, 'model')
+        self.fitted = False
 
     def _load_base_model(self, out_dim):
         if str(NLU_CONFIG[self.base_model_]) == 'dense':
@@ -41,14 +42,19 @@ class IntentClassifier(ModuleUnit):
 
     def load(self):
         checkpoint_path = os.path.join(ROOT_DIR, NLU_CONFIG['classifier_model'])
-        ckp = Path(os.path.join(checkpoint_path, 'checkpoint')).read_text()
-        m = ckp.splitlines()[0].split(': ')[-1]
-        self.fit_params = jsonread(os.path.join(checkpoint_path , 'params.json'))
-        checkpoint_path = os.path.join(checkpoint_path, m[1:-1])
-        # _, self.id2tag = load_map(os.path.join(self.fit_params["dataset_name"], 'vocab.tag'))
+        try:
+            ckp = Path(os.path.join(checkpoint_path, 'checkpoint')).read_text()
+            m = ckp.splitlines()[0].split(': ')[-1]
+            self.fit_params = jsonread(os.path.join(checkpoint_path , 'params.json'))
+            checkpoint_path = os.path.join(checkpoint_path, m[1:-1])
+            # _, self.id2tag = load_map(os.path.join(self.fit_params["dataset_name"], 'vocab.tag'))
 
-        self.model = self._load_base_model(self.fit_params["output_length"])
-        self.model.load_weights(checkpoint_path)
+            self.model = self._load_base_model(self.fit_params["output_length"])
+            self.model.load_weights(checkpoint_path)
+            self.fitted = True
+        except FileNotFoundError:
+            print(f'Classifier model not fitted, needs training')
+            self.fitted = False
 
     def _load_format_dataset(self, dataset):
         d = DatasetLoader(dataset)
@@ -105,6 +111,10 @@ class IntentClassifier(ModuleUnit):
                         callbacks=cp_callback)
         
         dump(self.fit_params, os.path.join(checkpoint_path, 'params.json'))
+        self.fitted = True
+
+        # LOGGING
+        print(f"Classifier model fitted")
 
     def classify(self, inputs):
         out = self.model.predict(inputs)

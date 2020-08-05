@@ -22,7 +22,13 @@ class BuiltinEntityTagger():
         return items
     
     def tag(self, item, **kwargs):
-        return self.translate_entity(self.parser.parse(item))
+        tags = self.translate_entity(self.parser.parse(item))
+        tags_dict = dict()
+        for t in tags:
+            tag_name = t['entity_kind']
+            del t['entity_kind'], t['range']
+            tags_dict.update({tag_name : t})
+        return tags_dict
     
     def get_all_grammar_entities(self):
         return list(self.entities.values())

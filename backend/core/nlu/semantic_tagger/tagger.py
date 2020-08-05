@@ -73,14 +73,18 @@ class SemanticTagger(ModuleUnit):
     def load(self, intent):
         self.intent = intent
         checkpoint_path = os.path.join(self.models_dir, f"{self.intent}")
-        ckp = Path(os.path.join(checkpoint_path, 'checkpoint')).read_text()
-        m = ckp.splitlines()[0].split(': ')[-1]
-        self.fit_params = jsonread(os.path.join(checkpoint_path , 'params.json'))
-        checkpoint_path = os.path.join(checkpoint_path, m[1:-1])
-        # _, self.id2tag = load_map(os.path.join(self.fit_params["dataset_name"], 'vocab.tag'))
+        try:
+            ckp = Path(os.path.join(checkpoint_path, 'checkpoint')).read_text()
+            m = ckp.splitlines()[0].split(': ')[-1]
+            self.fit_params = jsonread(os.path.join(checkpoint_path , 'params.json'))
+            checkpoint_path = os.path.join(checkpoint_path, m[1:-1])
+            # _, self.id2tag = load_map(os.path.join(self.fit_params["dataset_name"], 'vocab.tag'))
 
-        self.model = self._load_base_model(self.fit_params["output_length"])
-        self.model.load_weights(checkpoint_path)
+            self.model = self._load_base_model(self.fit_params["output_length"])
+            self.model.load_weights(checkpoint_path)
+        except FileNotFoundError:
+            print(f'{intent} tagger model not fitted, needs training')
+            self.intent = None
 
     def fit(self, dataset, intent):
         """
@@ -118,7 +122,8 @@ class SemanticTagger(ModuleUnit):
             history = self.model.fit(x_train, y_train,
                         epochs=self.fit_params['epochs'], batch_size=self.fit_params['batch_size'],
                         callbacks=cp_callback)
-        
+        # LOGGING
+        print(f"{self.intent} tagger fitted")
         dump(self.fit_params, os.path.join(checkpoint_path, 'params.json'))
         
 
