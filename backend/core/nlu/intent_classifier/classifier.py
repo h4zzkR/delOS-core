@@ -59,16 +59,20 @@ class IntentClassifier(ModuleUnit):
     def _load_format_dataset(self, dataset):
         d = DatasetLoader(dataset)
         featurizer = SentenceFeaturizer()
-        df_train, self.intent2id, self.id2intent, tag2id, id2tag = d.load_prepare_dataset()
+        df_train, df_valid, self.intent2id, self.id2intent, tag2id, id2tag = d.load_prepare_dataset()
+        if df_valid is not None:
+            self.fit_params['validate'] = True
         self.fit_params['dataset_name'] = dataset
 
         encoded_valid, y_valid = None, None
-        if self.fit_params['validate']:
+        if not self.fit_params['validate']:
             validate_prob = self.fit_params['validate_prob']
             length = len(df_train)
             df_valid, df_train = df_train.loc[:int(validate_prob * length)], df_train.loc[int(validate_prob * length):]
-            encoded_valid = featurizer.encode(df_valid['words'])
-            y_valid = df_valid['intent_label'].map(self.intent2id).values
+            self.fit_params['validate'] = True
+
+        encoded_valid = featurizer.encode(df_valid['words'])
+        y_valid = df_valid['intent_label'].map(self.intent2id).values
 
         encoded_train = featurizer.encode(df_train['words'])
         y_train = df_train['intent_label'].map(self.intent2id).values
@@ -125,20 +129,13 @@ class IntentClassifier(ModuleUnit):
 if __name__ == "__main__":
     tf_set_memory_growth()
     obj = IntentClassifier()
-    # # obj.fit('data/nlu_data/custom')
-    # d = DatasetLoader('data/nlu_data/custom')
-    # df_train, intent2id, id2intent, tag2id, id2tag = d.load_prepare_dataset()
-    # obj.load()
-    # ft = SentenceFeaturizer()
-
-    # inp_str = 'turn off the light'
-    # inp = tf.constant(ft.encode(inp_str)[None, :])
-    # inp2 = ft.encode(inp_str + ' please')[None, :]
-    # # inp3 = ft.encode(inp_str + ' please please')[None, :]
-    # input()
-    # print(obj.model.predict(inp))
-    # input()
-    # print(obj.model.predict(inp2))
-    # input()
-    # print(id2intent(obj.classify(inp)))
-    # obj.load('intent')
+    # obj.fit('data/nlu_data/custom')
+    d = DatasetLoader('data/nlu_data/custom')
+    df_train, df_valid, intent2id, id2intent, tag2id, id2tag = d.load_prepare_dataset()
+    obj.load()
+    ft = SentenceFeaturizer()
+    while True:
+        inp_str = input()
+        inp = ft.encode(inp_str)
+        in_id, out = obj.classify(inp)
+        print(id2intent[in_id])

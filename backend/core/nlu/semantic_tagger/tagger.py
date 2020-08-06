@@ -66,22 +66,31 @@ class SemanticTagger(ModuleUnit):
     def _load_format_dataset(self, dataset, merge_intents):
         d = DatasetLoader(dataset)
         featurizer = SentenceFeaturizer()
-        df_train, intent2id, id2intent, self.tag2id, self.id2tag = d.load_prepare_dataset()
+        df_train, df_valid, intent2id, id2intent, self.tag2id, self.id2tag = d.load_prepare_dataset()
+        if df_valid is not None:
+            self.fit_params['validate'] = True
         self.fit_params['dataset_name'] = dataset
 
         if merge_intents and isinstance(merge_intents, list) and all(i in intent2id.keys() for i in merge_intents):
             df_train = df_train[df_train['intent_label'].isin(merge_intents)]
+            if self.fit_params['validate']:
+                df_valid = df_valid[df_valid['intent_label'].isin(merge_intents)]
         else:    
             if self.intent and self.intent in intent2id.keys():
                 df_train = df_train[df_train['intent_label'] == self.intent]
+                if self.fit_params['validate']:
+                    df_valid = df_valid[df_valid['intent_label'] == self.intent]
+
 
         encoded_valid, y_valid = None, None
-        if self.fit_params['validate']:
+        if not self.fit_params['validate']:
             validate_prob = self.fit_params['validate_prob']
             length = len(df_train)
             df_valid, df_train = df_train.loc[:int(validate_prob * length)], df_train.loc[int(validate_prob * length):]
-            encoded_valid = self._encode_tokenize(featurizer, df_valid['words'])
-            y_valid = encode_token_labels(df_valid["words"], df_valid["word_labels"], featurizer, self.tag2id)
+            self.fit_params['validate'] = True
+
+        encoded_valid = self._encode_tokenize(featurizer, df_valid['words'])
+        y_valid = encode_token_labels(df_valid["words"], df_valid["word_labels"], featurizer, self.tag2id)
 
         encoded_train = self._encode_tokenize(featurizer, df_train['words'])
         y_train = encode_token_labels(df_train["words"], df_train["word_labels"], featurizer, self.tag2id)

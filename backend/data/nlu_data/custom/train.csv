@@ -1,67 +1,66 @@
 intent_label,words,word_labels,length
-turnLightOn,turn the lights set in the kitchen,O O O O O O B-location:room,7
-turnLightOff,off light,O O,2
+turnLightOff,disable this lights in the yard,O O O O O B-location:room,6
+turnLightOn,"it is so dark upstairs , turn light on",O O O O B-location:where_room O O O O,9
+turnLightOn,enable lights,O O,2
+turnLightOff,turn off the lights at the stairs,O O O O O O B-location:room,7
+turnLightOff,turn off the lights next door,O O O O B-location:where_room I-location:where_room,6
+turnLightOn,make light,O O,2
+turnLightOn,the light has to be on first,O O O O O O O,7
 turnLightOff,disable light at home,O O O B-location:room,4
-turnLightOff,light off,O O,2
-turnLightOff,"hey , shutdown the lights",O O O O O,5
-turnLightOn,turn on lights in the spare bedroom,O O O O O O B-location:room,7
-turnLightOn,please make light here,O O O B-location:current,4
-turnLightOff,turn off the house lights out in the attic,O O O O O O O O B-location:room,9
-turnLightOff,disable the house lights in across the garage,O O O O O O O B-location:room,8
-turnLightOn,light on,O O,2
-turnLightOn,on light here,O O B-location:current,3
-turnLightOn,swtich the garden's lights on,O O B-location:room O O,5
-turnLightOff,turn off the light,O O O O,4
-turnLightOn,turn the illumination,O O O,3
+turnLightOn,turn the lights set in the kitchen,O O O O O O B-location:room,7
 turnLightOff,turn off the lights coming in from the hall,O O O O O O O O B-location:room,9
 turnLightOn,turn light on,O O O,3
-turnLightOn,enable the illumination in the kitchen,O O O O O B-location:room,6
-turnLightOff,can you turn off the lights in the garden ?,O O O O O O O O B-location:room O,10
-turnLightOff,disable lights in kitchen please,O O O B-location:room O,5
-turnLightOff,cut the lights down in the house,O O O O O O B-location:room,7
-turnLightOff,no lights on in the office,O O O O O B-location:room,6
-turnLightOff,disable light in the dining room,O O O O B-location:room I-location:room,6
-turnLightOff,can you turn off the light here,O O O O O O B-location:current,7
-turnLightOff,turn this fucking lights off !,O O O O O O,6
-turnLightOn,here is dark too much,B-location:current O O O O,5
-turnLightOn,enable lights !,O O O,3
-turnLightOn,enable electric lights inside the office,O O O O O B-location:room,6
-turnLightOff,turn off the lights at the stairs,O O O O O O B-location:room,7
-turnLightOff,also disable lights in the dining room,O O O O O B-location:room I-location:room,7
-turnLightOff,turn off lights in kitchen and basement,O O O O B-location:room O B-location:room,7
-turnLightOff,disable the illumination in the kitchen please,O O O O O B-location:room O,7
-turnLightOn,the light has to be on first,O O O O O O O,7
-turnLightOff,i command you to turn off the lights in the toilet,O O O O O O O O O O B-location:room,11
-turnLightOff,turn off the lights next door,O O O O B-location:where_room I-location:where_room,6
-turnLightOn,enable light in the bedroom,O O O O B-location:room,5
-turnLightOn,also enable lights within the lavatory,O O O O O B-location:room,6
-turnLightOn,"it is so dark upstairs, turn light on",O O O O B-location:where_room O O O,8
-turnLightOff,"system, light off",O O O,3
-turnLightOff,turn down lights,O O O,3
-turnLightOff,shutdown the illumination in bedroom,O O O O B-location:room,5
-turnLightOn,so dark downstairs,O O B-location:where_room,3
-turnLightOn,switched on light in the parking garage,O O O O O B-location:room I-location:room,7
-turnLightOn,turn on the bathroom light,O O O B-location:room O,5
-turnLightOff,"bedroom , lights off",B-location:room O O O,4
-turnLightOn,"please, light on",O O O,3
-turnLightOff,"system , turn off the lightning in the toilet",O O O O O O O O B-location:room,9
-turnLightOn,make light,O O,2
-turnLightOn,enable lights coming through the lounge,O O O O O B-location:room,6
-turnLightOn,turn on light upstairs,O O O B-location:where_room,4
-turnLightOn,give me some light in the garage,O O O O O O B-location:room,7
-turnLightOn,activate lightning in the bathroom,O O O O B-location:room,5
-turnLightOn,turn on all emergency room lights in the garage,O O O O O O O O B-location:room,9
-turnLightOff,disable this lights in the yard,O O O O O B-location:room,6
-turnLightOff,disable lights please,O O O,3
-turnLightOn,it is dark here,O O O B-location:current,4
-turnLightOff,off the lights,O O O,3
-turnLightOn,turn back on lights in the loft,O O O O O O B-location:room,7
-turnLightOn,enable lights upstairs and in the basement,O O B-location:where_room O O O B-location:room,7
-turnLightOff,power off lights please,O O O O,4
-turnLightOn,garden is so dark,B-location:room O O O,4
-turnLightOff,turn off the lights upstairs in the bedroom,O O O O B-location:where_room O O B-location:room,8
-turnLightOn,make some light in bathroom,O O O O B-location:room,5
-turnLightOff,turn off the bathroom lights,O O O B-location:room O,5
-turnLightOn,turn on lights for the little kitchen,O O O O O O B-location:room,7
+turnLightOff,off the lights in plocation:room]kitchen,O O O O O,5
 turnLightOff,swtich the lounge's lights off please,O O B-location:room O O O,6
-turnLightOn,turn the lights set in the kitchen,O O O O O O B-location:room,7
+turnLightOff,no lights on in the office,O O O O O B-location:room,6
+turnLightOff,turn off the lights upstairs in the bedroom,O O O O B-location:where_room O O B-location:room,8
+turnLightOn,enable the illumination in the kitchen,O O O O O B-location:room,6
+turnLightOff,"hey , shutdown the lights",O O O O O,5
+turnLightOn,switched on light in the parking garage,O O O O O B-location:room I-location:room,7
+turnLightOn,please make light here,O O O B-location:current,4
+turnLightOff,"system , turn off the lightning in the toilet",O O O O O O O O B-location:room,9
+turnLightOff,can you turn off the light here,O O O O O O B-location:current,7
+turnLightOff,disable lights in house,O O O B-location:room,4
+turnLightOn,turn the illumination,O O O,3
+turnLightOn,it is dark here,O O O B-location:current,4
+turnLightOff,turn off the bathroom lights,O O O B-location:room O,5
+turnLightOff,disable the house lights in across the garage,O O O O O O O B-location:room,8
+turnLightOn,turn back on lights in the loft,O O O O O O B-location:room,7
+turnLightOff,"bedroom , lights off",B-location:room O O O,4
+turnLightOn,make some light in bathroom,O O O O B-location:room,5
+turnLightOff,disable lights in kitchen please,O O O B-location:room O,5
+turnLightOff,shutdown the illumination in bedroom,O O O O B-location:room,5
+turnLightOn,enable lights coming through the lounge,O O O O O B-location:room,6
+turnLightOn,turn on the bathroom light,O O O B-location:room O,5
+turnLightOff,disable lights please,O O O,3
+turnLightOn,on light here,O O B-location:current,3
+turnLightOff,also disable lights in the dining room - turn off the light,O O O O O B-location:room I-location:room O O O O O,12
+turnLightOff,turn off lights in kitchen and basement,O O O O B-location:room O B-location:room,7
+turnLightOn,here is dark too much,B-location:current O O O O,5
+turnLightOn,garden is so dark,B-location:room O O O,4
+turnLightOn,also enable lights within the lavatory,O O O O O B-location:room,6
+turnLightOff,off light,O O,2
+turnLightOn,enable light in the bedroom,O O O O B-location:room,5
+turnLightOff,i command you to turn off the lights in the toilet,O O O O O O O O O O B-location:room,11
+turnLightOff,power off lights please,O O O O,4
+turnLightOn,enable lights upstairs and in the basement,O O B-location:where_room O O O B-location:room,7
+turnLightOn,turn on lights in the spare bedroom,O O O O O O B-location:room,7
+turnLightOn,switch on lights in the toilet,O O O O O B-location:room,6
+turnLightOff,can you turn off the lights in the garden ?,O O O O O O O O B-location:room O,10
+turnLightOn,enable electric lights inside the office,O O O O O B-location:room,6
+turnLightOn,give me some light in the garage,O O O O O O B-location:room,7
+turnLightOn,so dark downstairs,O O B-location:where_room,3
+turnLightOff,cut the lights down in the house,O O O O O O B-location:room,7
+turnLightOff,turn down lights,O O O,3
+turnLightOff,disable light in the dining room,O O O O B-location:room I-location:room,6
+turnLightOn,turn on all emergency room lights in the garage,O O O O O O O O B-location:room,9
+turnLightOn,swtich the garden's lights on,O O B-location:room O O,5
+turnLightOff,turn off the house lights out in the attic,O O O O O O O O B-location:room,9
+turnLightOn,"please, light on",O O O,3
+turnLightOn,turn on light upstairs,O O O B-location:where_room,4
+turnLightOn,switch on lightnings,O O O,3
+turnLightOn,activate lightning in the bathroom,O O O O B-location:room,5
+turnLightOn,turn on lights for the hall,O O O O O B-location:room,6
+turnLightOff,disable the illumination in the kitchen please,O O O O O B-location:room O,7
+turnLightOff,"system, light off",O O O,3
+turnLightOff,light off,O O,2

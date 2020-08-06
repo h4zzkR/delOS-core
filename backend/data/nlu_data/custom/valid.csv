@@ -1,0 +1,16 @@
+intent_label,words,word_labels,length
+turnLightOn,turn lights set in the bedroom,O O O O O O B-location:room,6
+turnLightOff,"hey , off light",O O O O,4
+turnLightOff,disable light at house,O O O B-location:room,4
+turnLightOff,light off,O O,2
+turnLightOff,shutdown light in the bedroom,O O O O B-location:room,5
+turnLightOff,shutdown the lights in the garden,O O O O O B-location:room,6
+turnLightOn,turn on lights in the spare bedroom,O O O O O O B-location:room,7
+turnLightOn,please make light here,O O O B-location:current,4
+turnLightOff,turn off the house lights out in the attic,O O O O O O O O B-location:room,9
+turnLightOff,disable the house lights in across the garage,O O O O O O O B-location:room,8
+turnLightOn,light on,O O,2
+turnLightOn,on light here,O O B-location:current,3
+turnLightOn,enable lights,O O,2
+turnLightOff,disable lights,O O,2
+turnLightOff,shutdown lights,O O,2

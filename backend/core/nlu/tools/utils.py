@@ -125,8 +125,10 @@ class IntentsDatasetLoader(DatasetLoader):
         intent2id, id2intent = self.load_intents_map()
 
         df = pd.read_csv(os.path.join(self.dset_intents_dir, 'train.csv'))
-        
-        return df, intent2id, id2intent, None, None
+        df_valid = None
+        if 'valid.csv' in os.listdir(self.dset_intents_dir):
+            df_valid = pd.read_csv(os.path.join(self.dset_intents_dir, 'valid.csv'))
+        return df, df_valid, intent2id, id2intent, None, None
 
 class TagsDatasetLoader(DatasetLoader):
     def __init__(self, dset_intents_name, dset_tags_name=None):
@@ -138,8 +140,11 @@ class TagsDatasetLoader(DatasetLoader):
         tag2id, id2tag = self.load_tags_map()
         intent2id, id2intent = self.load_intents_map()
 
-        df= pd.read_csv(os.path.join(self.dset_tags_dir, 'train.csv'))
-        return df, intent2id, id2intent, tag2id, id2tag
+        df = pd.read_csv(os.path.join(self.dset_tags_dir, 'train.csv'))
+        df_valid = None
+        if 'valid.csv' in os.listdir(self.dset_tags_dir):
+            df_valid = pd.read_csv(os.path.join(self.dset_tags_dir, 'valid.csv'))
+        return df, df_valid, intent2id, id2intent, tag2id, id2tag
 
 def load_intents_map(intents_dset_name):
     d = DatasetLoader(dset_intents_name=intents_dset_name)

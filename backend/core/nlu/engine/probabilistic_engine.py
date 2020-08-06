@@ -61,12 +61,12 @@ class ProbabilisticNLUEngine(NLUEngine):
             if self.taggers.get(intent_name) is None:
                 self.taggers[intent_name] = SemanticTagger()
                 self.taggers[intent_name].load(intent_name)
-            if intent_name in merge_taggers and merge_taggers:
+            if merge_taggers and intent_name in merge_taggers:
                 if force_retrain or not self.taggers[intent_name].fitted():
                     self.taggers[intent_name].fit(dataset, intent_name, merge_taggers.split())
             else:
                 if force_retrain or not self.taggers[intent_name].fitted():
-                    self.taggers[intent_name].fit(dataset, intent_name)
+                    self.taggers[intent_name].fit(dataset, intent_name, merge_taggers)
         # LOGGING
         print(f'Fitted tagger models in {elapsed_time(start_time)}s')
         return self
@@ -148,5 +148,7 @@ if __name__ == "__main__":
     obj = ProbabilisticNLUEngine()
     obj.fit('data/nlu_data/custom', merge_taggers='turnLightOn turnLightOff')
     obj.eval()
-    print(obj.parse('switch on lights here'))
+    while True:
+        inp = input()
+        print(obj.parse(inp))
     # obj.load('intent')

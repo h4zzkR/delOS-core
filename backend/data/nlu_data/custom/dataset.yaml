@@ -1,6 +1,7 @@
 ---
 intents:
   - type: intent
+    task: train
     name: turnLightOff
     utterances:
       - turn off the [location:room](bathroom) lights
@@ -12,20 +13,14 @@ intents:
       - can you turn off the light [location:current](here)
       - turn off the lights [location:where_room](next door)
       - swtich the [location:room](lounge)'s lights off please
-      - turn off the light
-      - hey , shutdown the lights
-      - disable lights please
       - "[location:room](bedroom) , lights off"
-      - light off
       - i command you to turn off the lights in the [location:room](toilet)
       - system, light off
       - off the lights in plocation:room](kitchen)
       - disable light at [location:room](home)
       - disable lights in [location:room](kitchen) please
-      - turn down lights
-      - off light
-      - power off lights please
       - disable this lights in the [location:room](yard)
+      - disable lights in [location:room](house)
       - turn off lights in [location:room](kitchen) and [location:room](basement)
       - disable light in the [location:room](dining room)
       - turn off the lights [location:where_room](upstairs) in the [location:room](bedroom)
@@ -35,8 +30,17 @@ intents:
       - cut the lights down in the [location:room](house)
       - no lights on in the [location:room](office)
       - also disable lights in the [location:room](dining room)
+        - turn off the light
+      - hey , shutdown the lights
+      - disable lights please
+      - light off
+      - disable lights
+      - turn down lights
+      - off light
+      - power off lights please
 
   - type: intent
+    task: train
     name: turnLightOn
     utterances:
       - turn on the [location:room](bathroom) light
@@ -52,6 +56,7 @@ intents:
       - the light has to be on first
       - switch on lights in the [location:room](toilet)
       - turn light on
+      - enable lights
       - please, light on
       - on light [location:current](here)
       - so dark [location:where_room](downstairs)
@@ -65,6 +70,7 @@ intents:
       - switched on light in the [location:room](parking garage)
       - turn the lights set in the [location:room](kitchen)
       - turn the illumination
+      - switch on lightnings
       - turn back on lights in the [location:room](loft)
       - turn on lights for the [location:room](hall)
       - enable electric lights inside the [location:room](office)
