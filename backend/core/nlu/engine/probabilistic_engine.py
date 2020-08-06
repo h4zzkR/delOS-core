@@ -86,6 +86,7 @@ class ProbabilisticNLUEngine(NLUEngine):
             intents = list(intents)
 
         tokenized_seq, enc_seq, pool_out = self.encode_text(text)
+        pool_out = self.featurizer.encode(self.input_processor(text))
         builtin_tags = self.builtin_tagger.tag(text)
         # print(self.builtin_tagger.tag('buy milk for 2.5 dollars')); sys.exit()
         if len(builtin_tags) == 0:

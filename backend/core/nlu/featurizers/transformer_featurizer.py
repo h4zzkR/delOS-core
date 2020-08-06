@@ -107,6 +107,7 @@ class SentenceFeaturizer():
 
     def featurize(self, inputs):
         seq = self.encode_dataset([inputs]).tolist()
+        # inputs = [inputs]
         pooled_out, encoded_seq = list(map(lambda i: tf.constant(i)[None, :], \
                                     self.featurizer.featurize(seq, convert_to_numpy=True, is_pretokenized=True)))
         return seq, encoded_seq, pooled_out

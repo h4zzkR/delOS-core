@@ -32,6 +32,10 @@ def intent_parser():
         pred = engines['nlu'].parse(inp)
         # Returning JSON response to the frontend
         print(pred)
-        return jsonify(pred)
+        intent = pred['intent']
+        tags = f"{intent} intent | "
+        for tag_name in pred['tags'].keys():
+            tags += f"{tag_name}@{pred['tags'][tag_name]['value'][0]}"
+        return tags
     else:
         return render_template('main.html')
