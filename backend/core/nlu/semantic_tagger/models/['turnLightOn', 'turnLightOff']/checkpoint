@@ -1,2 +1,0 @@
-model_checkpoint_path: "[\'turnLightOn\', \'turnLightOff\']_model"
-all_model_checkpoint_paths: "[\'turnLightOn\', \'turnLightOff\']_model"

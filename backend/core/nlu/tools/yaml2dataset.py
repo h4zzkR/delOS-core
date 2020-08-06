@@ -5,6 +5,7 @@ import argparse
 import re
 import pandas as pd
 from pathlib import Path
+from sklearn.utils import shuffle
 from backend.config import ROOT_DIR, INTENTS, ENTITIES, UTTERANCES
 
 parser = argparse.ArgumentParser(
@@ -19,7 +20,7 @@ args = parser.parse_args()
 #TODO: убрать комбинации шаблонных, аугментации, мб на основе рандома решать, какие слоты заменять синонимами
 
 class DatasetBuilder:
-    def __init__(self, path2dset, max_synonyms, path2write=None, drop_stopwords=False, valid_prob=1):
+    def __init__(self, path2dset, max_synonyms, path2write=None, drop_stopwords=False):
         # TODO: add synonym augmentions
         # TODO: remove train_test split
         self.path = Path(os.path.join(ROOT_DIR, path2dset))
@@ -27,7 +28,6 @@ class DatasetBuilder:
         self.max_synonyms = max_synonyms
         self.intent_vocab = []
         self.tag_vocab = []
-        self.valid_prob = valid_prob
 
     def write_intent_vocab(self):
         with open(os.path.join(self.path.parent, 'vocab.intent'), 'w') as file:
@@ -39,6 +39,7 @@ class DatasetBuilder:
             for i in self.tag_vocab:
                 file.write('B-' + i + '\n')
                 file.write('I-' + i + '\n')
+            file.write('O' + '\n')
 
     def augment_intent(self, slot_map, intent):
         pass
@@ -56,16 +57,15 @@ class DatasetBuilder:
         print(f'{length} unique examples builded')
         self.write_intent_vocab(); self.write_tag_vocab()
         # Shuffle
-        df = df.sample(frac=1).reset_index(drop=True)
+        df = shuffle(df).reset_index(drop=True)
 
-        valid, train = df.loc[:int(self.valid_prob * length)], df.loc[int(self.valid_prob * length):]
         if self.out:
             tp = os.path.join(self.out, 'train.csv')
             vp = os.path.join(self.out, 'valid.csv')
-            train.to_csv(tp, index=False)
-            valid.to_csv(vp, index=False)
+            df.to_csv(tp, index=False)
+            # valid.to_csv(vp, index=False)
         else:
-            return train, valid
+            return train#, valid
         
     def read_yaml(self):
         with open(self.path) as file:

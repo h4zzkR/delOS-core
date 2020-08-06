@@ -1,18 +1,18 @@
 {
     "semantic_tagger_base_model" : {
-        "validate_prob" : 0.2,
-        "from_logits" : false,
-        "learning_rate" : 0.002,
+        "validate_prob" : 1,
+        "from_logits" : true,
+        "learning_rate" : 0.0025,
         "epsilon" : 1e-09,
         "batch_size" : 32,
-        "epochs" : 14
+        "epochs" : 15
     },
     "intent_classifier_base_model" : {
         "validate_prob" : 0.2,
         "from_logits" : false,
         "learning_rate" : 0.001,
         "epsilon" : 1e-09,
-        "batch_size" : 32,
-        "epochs" : 10
+        "batch_size" : 16,
+        "epochs" : 15
     }
 } 
