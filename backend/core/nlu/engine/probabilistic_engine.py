@@ -27,6 +27,7 @@ class ProbabilisticNLUEngine(NLUEngine):
         super().__init__()
         self.intent_classifier = None
         self.taggers = dict()
+        self.dataset = None
 
     def _load_modules(self):
         self.featurizer = SentenceFeaturizer()
@@ -38,6 +39,8 @@ class ProbabilisticNLUEngine(NLUEngine):
 
     def eval(self, dataset=NLU_CONFIG['universal_dataset']):
         self._load_modules()
+        if self.dataset:
+            dataset = self.dataset
         self.id2intent = load_id2intent(dataset)
         self.id2tag = load_id2tag(dataset)
         self.builtin_tagger = BuiltinEntityTagger()
@@ -45,7 +48,8 @@ class ProbabilisticNLUEngine(NLUEngine):
     def encode_text(self, text):
         return self.featurizer.featurize(self.input_processor(text))
 
-    def fit(self, dataset=NLU_CONFIG["universal_dataset"], force_retrain=False):
+    def fit(self, dataset=NLU_CONFIG["universal_dataset"], force_retrain=False, merge_taggers=None):
+        self.dataset = dataset
         intents = get_all_intents(dataset)
         if self.intent_classifier is None:
             self.intent_classifier = IntentClassifier()
@@ -57,11 +61,58 @@ class ProbabilisticNLUEngine(NLUEngine):
             if self.taggers.get(intent_name) is None:
                 self.taggers[intent_name] = SemanticTagger()
                 self.taggers[intent_name].load(intent_name)
-            if force_retrain or not self.taggers[intent_name].fitted():
-                self.taggers[intent_name].fit(dataset, intent_name)
+            if intent_name in merge_taggers and merge_taggers:
+                if force_retrain or not self.taggers[intent_name].fitted():
+                    self.taggers[intent_name].fit(dataset, intent_name, merge_taggers.split())
+            else:
+                if force_retrain or not self.taggers[intent_name].fitted():
+                    self.taggers[intent_name].fit(dataset, intent_name)
         # LOGGING
         print(f'Fitted tagger models in {elapsed_time(start_time)}s')
         return self
+
+    def mixin_builtin_tags(self, result, builtin_tags):
+        if builtin_tags is not None:
+            result['tags'].update(builtin_tags)
+        return result
+
+    def top_n_intent_names(self, probs):
+        return np.argsort(probs)
+
+    def parse(self, text, top_n=None, intents=None):
+        if isinstance(intents, str):
+            intents = {intents}
+        elif isinstance(intents, list):
+            intents = list(intents)
+
+        tokenized_seq, enc_seq, pool_out = self.encode_text(text)
+        builtin_tags = self.builtin_tagger.tag(text)
+        # print(self.builtin_tagger.tag('buy milk for 2.5 dollars')); sys.exit()
+        if len(builtin_tags) == 0:
+            builtin_tags = None
+
+        if top_n is None:
+            intent_id, probs = self.intent_classifier.classify(pool_out)
+            intent_name = self.id2intent[intent_id]
+            if intent_name is not None:
+                tags_logits = self.taggers[intent_name].tag(enc_seq)
+            else:
+                tags_logits = None
+            # print(tags_logits)
+            return self.mixin_builtin_tags(self.build_result(text, intent_name, tags_logits), \
+                builtin_tags)
+
+        results = []
+        _, probs = self.intent_classifier.classify(pool_out)
+        intent_ids = self.top_n_intent_names(probs)
+        for intent_id in intent_ids[-1:len(intent_ids)-top_n-1]:
+            intent_name = self.id2intent[intent_id]
+            if intent_name is not None:
+                tags_logits = self.taggers[intent_name].tag(enc_seq)
+            else:
+                tags_logits = []
+            results.append(self.build_result(text, intent_name, tags_logits))
+        return results
 
     def build_result(self, text, intent_name, tag_logits):
         info = {"intent": intent_name}
@@ -93,51 +144,9 @@ class ProbabilisticNLUEngine(NLUEngine):
         info["tags"] = collected_tags
         return info
 
-    def mixin_builtin_tags(self, result, builtin_tags):
-        if builtin_tags is not None:
-            result['tags'].update(builtin_tags)
-        return result
-
-    def top_n_intent_names(self, probs):
-        return np.argsort(probs)
-
-    def parse(self, text, top_n=None, intents=None):
-        if isinstance(intents, str):
-            intents = {intents}
-        elif isinstance(intents, list):
-            intents = list(intents)
-
-        tokenized_seq, enc_seq, pool_out = self.encode_text(text)
-        builtin_tags = self.builtin_tagger.tag(text)
-        # print(self.builtin_tagger.tag('buy milk for 2.5 dollars')); sys.exit()
-        if len(builtin_tags) == 0:
-            builtin_tags = None
-
-        if top_n is None:
-            intent_id, probs = self.intent_classifier.classify(pool_out)
-            intent_name = self.id2intent[intent_id]
-            if intent_name is not None:
-                tags_logits = self.taggers[intent_name].tag(enc_seq)
-            else:
-                tags_logits = None
-            return self.mixin_builtin_tags(self.build_result(text, intent_name, tags_logits), \
-                builtin_tags)
-
-        results = []
-        _, probs = self.intent_classifier.classify(pool_out)
-        intent_ids = self.top_n_intent_names(probs)
-        for intent_id in intent_ids[-1:len(intent_ids)-top_n-1]:
-            intent_name = self.id2intent[intent_id]
-            if intent_name is not None:
-                tags_logits = self.taggers[intent_name].tag(enc_seq)
-            else:
-                tags_logits = []
-            results.append(self.build_result(text, intent_name, tags_logits))
-        return results
-
 if __name__ == "__main__":
     obj = ProbabilisticNLUEngine()
-    obj.fit('data/nlu_data/custom')
+    obj.fit('data/nlu_data/custom', merge_taggers='turnLightOn turnLightOff')
     obj.eval()
-    print(obj.parse('turn off the lights in the kitchen'))
+    print(obj.parse('switch on lights here'))
     # obj.load('intent')

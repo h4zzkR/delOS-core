@@ -1,0 +1,2 @@
+model_checkpoint_path: "RateBook_model"
+all_model_checkpoint_paths: "RateBook_model"

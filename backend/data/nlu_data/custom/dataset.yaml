@@ -19,12 +19,11 @@ intents:
       - light off
       - i command you to turn off the lights in the [location:room](toilet)
       - system, light off
-      - off the lights
+      - off the lights in plocation:room](kitchen)
       - disable light at [location:room](home)
       - disable lights in [location:room](kitchen) please
       - turn down lights
       - off light
-      - turn this fucking lights off !
       - power off lights please
       - disable this lights in the [location:room](yard)
       - turn off lights in [location:room](kitchen) and [location:room](basement)
@@ -48,16 +47,15 @@ intents:
       - swtich the [location:room](garden)'s lights on
       - give me some light in the [location:room](garage)
       - it is dark [location:current](here)
-      - it is so dark [location:where_room](upstairs), turn light on
+      - it is so dark [location:where_room](upstairs) , turn light on
       - make some light in [location:room](bathroom)
       - the light has to be on first
-      - light on
+      - switch on lights in the [location:room](toilet)
       - turn light on
       - please, light on
       - on light [location:current](here)
       - so dark [location:where_room](downstairs)
       - please make light [location:current](here)
-      - enable lights !
       - enable lights [location:where_room](upstairs) and in the [location:room](basement)
       - make light
       - '[location:room](garden) is so dark'
@@ -68,7 +66,7 @@ intents:
       - turn the lights set in the [location:room](kitchen)
       - turn the illumination
       - turn back on lights in the [location:room](loft)
-      - turn on lights for the little [location:room](kitchen)
+      - turn on lights for the [location:room](hall)
       - enable electric lights inside the [location:room](office)
       - also enable lights within the [location:room](lavatory)
       - turn on lights in the spare [location:room](bedroom)

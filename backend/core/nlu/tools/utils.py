@@ -47,8 +47,7 @@ def encode_token_labels(text_sequences, slot_names, featurizer, slot_map, max_le
     return encoded
 
 def encode_dataset(featurizer, text_sequences, max_length=NLU_CONFIG['max_seq_length']):
-    token_ids = np.zeros(shape=(len(text_sequences), max_length),
-                         dtype=np.int32)
+    token_ids = np.zeros(shape=(len(text_sequences), max_length), dtype=np.int32)
     for i, text_sequence in enumerate(text_sequences):
         encoded = featurizer.tokenize(text_sequence)
         token_ids[i, 0:len(encoded)] = encoded
@@ -187,7 +186,6 @@ def get_all_intents(dataset):
         for i in file.readlines():
             intents_vocab_list.append(i.replace('\n', ''))
     return intents_vocab_list
-    
 
 # DEPRECATED
 
