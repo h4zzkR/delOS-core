@@ -1,0 +1,2 @@
+model_checkpoint_path: "PlayMusic_model"
+all_model_checkpoint_paths: "PlayMusic_model"

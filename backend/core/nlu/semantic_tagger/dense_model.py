@@ -3,6 +3,7 @@ import tensorflow as tf
 from transformers import TFBertModel, BertTokenizer
 from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling1D
 from tensorflow.keras.activations import softmax
+import numpy as np
 
 from future.utils import with_metaclass
 
