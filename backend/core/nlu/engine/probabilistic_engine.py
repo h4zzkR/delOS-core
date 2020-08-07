@@ -147,7 +147,7 @@ class ProbabilisticNLUEngine(NLUEngine):
 
 if __name__ == "__main__":
     obj = ProbabilisticNLUEngine()
-    obj.fit('data/nlu_data/custom', merge_taggers='turnLightOn turnLightOff')
+    obj.fit('data/nlu_data/snipsai', force_retrain=True)#, merge_taggers='turnLightOn turnLightOff')
     obj.eval()
     while True:
         inp = input()

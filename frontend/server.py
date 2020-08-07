@@ -15,7 +15,7 @@ app = Flask(__name__)
 api = Api(app)
 engines = {'nlu' : ProbabilisticNLUEngine()}
 for engine in engines.keys():
-    engines[engine].fit()
+    engines[engine].fit('data/nlu_data/snipsai')
     engines[engine].eval()
 
 # Testing URL
@@ -24,7 +24,7 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/nlu/parse_intent/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def intent_parser():
     if request.method == 'POST':
         # Decoding and pre-processing base64 image
@@ -35,7 +35,7 @@ def intent_parser():
         intent = pred['intent']
         tags = f"{intent} intent | "
         for tag_name in pred['tags'].keys():
-            tags += f"{tag_name}@{pred['tags'][tag_name]['value'][0]}"
+            tags += f"{tag_name}@{pred['tags'][tag_name]['value'][0]}; "
         return tags
     else:
         return render_template('main.html')
