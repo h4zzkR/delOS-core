@@ -1,1 +1,1 @@
-{"validate_prob": 0.2, "from_logits": false, "learning_rate": 0.001, "epsilon": 1e-09, "batch_size": 16, "epochs": 15, "validate": true, "dataset_name": "data/nlu_data/custom", "output_length": 2}
+{"validate_prob": 0.2, "from_logits": false, "learning_rate": 0.001, "epsilon": 1e-09, "batch_size": 16, "epochs": 15, "validate": true, "dataset_name": "data/nlu_data/snipsai", "output_length": 7}

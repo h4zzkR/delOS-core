@@ -150,7 +150,7 @@
   <body>
     <div class="main-block">
       <h1>NLP Intent Parsing</h1>
-      <form action="/nlu/parse_intent/" method="post">
+      <form action="/" method="post">
         <hr>
         <div class="">
             <p style="font-size: large; text-align: left;">
@@ -162,7 +162,7 @@
         <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
         <input type="text" name="message" id="name" placeholder="Message" required/>
         <div class="btn-block">
-          <button type="submit" href="/nlu/parse_intent/">Parse</button>
+          <button type="submit" href="/">Parse</button>
         </div>
       </form>
     </div>
@@ -170,10 +170,15 @@
         <div class="text-about">
             <h2>Intent - is a task that the system must do, something you want from it.</h2>
             <p style="font-size: large; text-align: left; margin-bottom: 8px;">
-              For now, you can ask system to turn light on/off
-              in different rooms, ex:</p>
+              For now, you can ask system to:
+              <b>AddToPlaylist</b> - add song to playlist; 
+              <b>BookRestaurant</b> - book a table; 
+              <b>GetWeather</b> - weather info in city/country/place; 
+              <b>PlayMusic</b> - play song (specify a song); 
+              <b>SearchCreativeWork</b> - search serials and media in web; 
+              <b>SearchScreeningEvent</b> - search movies in cinema; 
               <p style="font-family: monospace; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400;">
-                "enable light in the garden" : turnLightOn
+                "get weather in Moscow" : GetWeather | city (country)@moscow
               </p>
               <p style="font-size: large; text-align: left; margin-bottom: 8px;">
               You can add training examples in <b>data/nlu_engine/custom/dataset.yaml</b> for
@@ -181,20 +186,6 @@
             </p>
         </div>
     </div>
-    <div class="main-block">
-      <div class="text-about">
-          <h2>Intent - is a task that the system must do, something you want from it.</h2>
-          <p style="font-size: large; text-align: left; margin-bottom: 8px;">
-            For now, you can ask system to turn light on/off
-            in different rooms, ex:</p>
-            <p style="font-family: monospace; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400;">
-              "enable light in the garden" : turnLightOn
-            </p>
-            <p style="font-size: large; text-align: left; margin-bottom: 8px;">
-            You can add training examples in <b>data/nlu_engine/custom/dataset.yaml</b> for
-            training classifier and tagger models on them.
-          </p>
-      </div>
   </div>
   </body>
 </html>
