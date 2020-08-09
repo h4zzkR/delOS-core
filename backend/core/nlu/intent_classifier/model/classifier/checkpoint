@@ -1,2 +1,0 @@
-model_checkpoint_path: "classifier_model"
-all_model_checkpoint_paths: "classifier_model"

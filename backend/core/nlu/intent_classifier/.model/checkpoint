@@ -1,2 +1,0 @@
-model_checkpoint_path: "intents_dense_cls_e9_bs32"
-all_model_checkpoint_paths: "intents_dense_cls_e9_bs32"
