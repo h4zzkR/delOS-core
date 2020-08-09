@@ -222,10 +222,13 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/python,pycharm,jupyternotebooks,visualstudiocode
 
-core/nlu/intent_classifier/model/*
-core/nlu/intent_classifier/.model/*
-core/nlu/semantic_taggers/DefaultTagger/model/*
-core/nlu/semantic_taggers/DefaultTagger/.model/*
-data/nlu_data/fbmulti/*
-data/nlu_data/snipsai/*
-data/nlu_data/merged/*
+backend/core/nlu/intent_classifier/model/*
+backend/core/nlu/intent_classifier/.model/*
+backend/core/nlu/semantic_taggers/DefaultTagger/model/*
+backend/core/nlu/semantic_taggers/DefaultTagger/.model/*
+backend/data/nlu_data/fbmulti/*
+backend/data/nlu_data/snipsai/*
+backend/data/nlu_data/merged/*
+
+# Notebooks for developing
+backend/core/notebooks/*
