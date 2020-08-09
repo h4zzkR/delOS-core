@@ -23,6 +23,7 @@ class DatasetBuilder:
     def __init__(self, path2dset, max_synonyms, path2write=None, drop_stopwords=False):
         # TODO: add synonym augmentions
         # TODO: remove train_test split
+        self.path2dset = path2dset
         self.path = Path(os.path.join(ROOT_DIR, path2dset))
         self.out = os.path.join(ROOT_DIR, path2write)
         self.max_synonyms = max_synonyms
@@ -62,7 +63,10 @@ class DatasetBuilder:
         if self.out:
             tp = os.path.join(self.out, 'train.csv')
             vp = os.path.join(self.out, 'valid.csv')
-            df.to_csv(tp, index=False)
+            if 'vdataset' in self.path2dset:
+                df.to_csv(vp, index=False)
+            else:
+                df.to_csv(tp, index=False)
             # valid.to_csv(vp, index=False)
         else:
             return train#, valid

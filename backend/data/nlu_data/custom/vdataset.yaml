@@ -1,0 +1,65 @@
+---
+intents:
+  - type: intent
+    task: valid
+    name: turnLightOff
+    utterances:
+      - disable light in the [location:room](attic)
+      - shutdown lights in [location:room](bedroom)
+      - turn off light in the [location:room](kitchen)
+      - light off please
+      - system , disable light [location:where](upstairs)
+      - turn down light in [location:room](bathroom)
+      - off the light in the [location:room](toilet)
+      - switch off light in the [location:room](dining room)
+      - light off in the [location:room](house)
+
+  - type: intent
+    task: valid
+    name: turnLightOn
+    utterances:
+      - enable light in the [location:room](kitchen)
+      - turn on lights in [location:room](toilet)
+      - lights on
+      - make light in the [location:room](garage)
+      - turn lights on [location:where)(here)
+      - switch on lights in the [location:room](house)
+      - light on please in the [location:room](attic)
+      - turn on light in [location:room](bedroom)
+
+entities:
+# turnOffLight Entity
+  - type: location
+    name: room
+    task: train
+    values:
+      - kitchen
+      - stairs
+      - garage
+      - [toilet, lavatory, restroom, loo]
+      - [bedroom, sleeping room]
+      - [dining room, cafeteria]
+      - [office, parlor, study room]
+      - [basement, cellar]
+      - [hall, hallway, corridor]
+      - [attic, loft, garret]
+      - [lounge, living room, salon]
+      - [house, home]
+
+# turnOffLight Entity
+  - type: location
+    name: where
+    task: train
+    replace_synonyms: True
+    values:
+      - downstairs
+      - in the adjacent room
+      - [upstairs, upwards, above]
+      - [next door, near room]
+
+  - type: location
+    task: train
+    name: current
+    values:
+      - here
+      - in this room

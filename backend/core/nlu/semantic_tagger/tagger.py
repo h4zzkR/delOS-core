@@ -14,8 +14,8 @@ from backend.config import ROOT_DIR, TAGGER_DIR, NLU_CONFIG, MODELS_FIT_PARAMS
 from backend.core.nlu.semantic_tagger.dense_model import DenseTagsExtractor
 from backend.core.nlu.tools.utils import TagsDatasetLoader as DatasetLoader
 from backend.core.nlu.featurizers.transformer_featurizer import SentenceFeaturizer
-from backend.core.nlu.tools.utils import encode_dataset, encode_token_labels, jsonread, \
-    load_tags_map, jsonread, load_map, dump
+from backend.core.nlu.tools.utils import encode_dataset, encode_token_labels, load_tags_map, load_map
+from backend.functional import dump, jsonread
 
 class SemanticTagger(ModuleUnit):
     def __init__(self, module_name = 'semantic_tagger'):

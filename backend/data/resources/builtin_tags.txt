@@ -1,0 +1,11 @@
+@amountOfMoney
+@date
+@datePeriod
+@datetime
+@duration
+@number
+@ordinal
+@percentage
+@temperature
+@time
+@timePeriod'
