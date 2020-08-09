@@ -12,3 +12,4 @@ termcolor==1.1.0
 tokenizers==0.7.0
 tqdm==4.46.0
 transformers==2.9.0
+nlpaug==0.0.14
