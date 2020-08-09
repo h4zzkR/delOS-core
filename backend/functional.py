@@ -23,3 +23,17 @@ def elapsed_time(start):
     time = now - start
     return time.seconds
 
+def dump(dictionary, path, **kwargs):
+    if ROOT_DIR not in path:
+        path = os.path.join(ROOT_DIR, path)
+    with open(path, 'w') as outfile:
+        json.dump(dictionary, outfile, **kwargs)
+
+def jsonread(path):
+    with open(path, "r") as read_file:
+        data = json.load(read_file)
+    return data
+
+def listdir(path):
+    return next(os.walk(path))[1]
+
