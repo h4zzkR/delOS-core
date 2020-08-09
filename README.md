@@ -3,7 +3,6 @@ Attempts to build conceptual chat and voice assistant.
 
 # Intents detection (turnLightOn and turnLightOff example and others)
 # Will be more intents in future with an ability to add custom data
-# [DEMO](http://b5aa8c903d7e.ngrok.io/)
 `
 > turn off light <br>
 < turnLightOff <br>
