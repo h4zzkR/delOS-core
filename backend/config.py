@@ -10,18 +10,47 @@ NLU_DIR = os.path.join(CORE_DIR, 'nlu')
 TAGGER_DIR = os.path.join(NLU_DIR, 'semantic_tagger')
 CLASSIFIER_DIR = os.path.join(NLU_DIR, 'intent_classifier')
 IMAP_PATH = os.path.join(NLU_DIR, 'tag_intent_manager/taggers_map.json')
-
 CONFIG_DIR = os.path.join(ROOT_DIR, 'config.py')
+
+DATA_PATH = os.path.join(ROOT_DIR, 'datasets')
+CUSTOM_NERINTENT_DSET = os.path.join(DATA_PATH, "nlu_data/custom/dataset.yaml")
+
 PACKAGE_NAME = "delOS"
-DATA_PACKAGE_NAME = "data"
-DATA_PATH = os.path.join(ROOT_DIR, DATA_PACKAGE_NAME)
 
 CONFIG = read_config()
-NLU_CONFIG = CONFIG['nlu_engine']
+NLU_ENCODER_CONFIG = CONFIG['encoder_core_module']
+NLU_ENGINE_CONFIG = CONFIG['nlu_engine']
 NER_CONFIG = CONFIG['ner_engine']
 
 # MODELLING
 MODELS_FIT_PARAMS = os.path.join(ROOT_DIR, 'configs/models_fit_params.json')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # miscellaneous
 BUILTIN_ENTITY_TAGGER = "builtin_entity_tagger"

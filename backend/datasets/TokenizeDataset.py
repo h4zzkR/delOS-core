@@ -1,34 +1,34 @@
 import os
 import yaml
 import tqdm
-import argparse
 import re
 import pandas as pd
 from pathlib import Path
 from sklearn.utils import shuffle
-from backend.config import ROOT_DIR, INTENTS, ENTITIES, UTTERANCES
+from sklearn.model_selection import train_test_split
 
-parser = argparse.ArgumentParser(
-    description='Tool that combines entities and intents for building datastet from human-friendly yaml'
-    )
-parser.add_argument('--path2dset', type=str, default='data/nlu_data/custom/dataset.yaml')
-parser.add_argument('--path2write', type=str, default='data/nlu_data/custom/')
-parser.add_argument('--max_synonyms', type=int, default=-1, help='Set the maximum of synonym numbers for one intent template')
-parser.add_argument("--rebuild_dataset", default=False, action="store_true")
+from backend.config import INTENTS, ENTITIES, UTTERANCES, CUSTOM_NERINTENT_DSET
 
-args = parser.parse_args()
-#TODO: убрать комбинации шаблонных, аугментации, мб на основе рандома решать, какие слоты заменять синонимами
 
-class DatasetBuilder:
-    def __init__(self, path2dset, max_synonyms, path2write=None, drop_stopwords=False):
+class DatasetTranslator:
+    def __init__(self, path2dset=CUSTOM_NERINTENT_DSET, max_synonyms=2, path2write=None,
+                 validate_split=True, drop_stopwords=False):
+        """
+        Make dataset from yaml format.
+        path2dset: FULL path to the dataset (default is custom)
+        max_synonyms: check yaml custom dataset for more info
+        path2write: dump translated dataset to this path (full path)
+        """
         # TODO: add synonym augmentions
         # TODO: remove train_test split
         self.path2dset = path2dset
-        self.path = Path(os.path.join(ROOT_DIR, path2dset))
-        self.out = os.path.join(ROOT_DIR, path2write)
+        self.path = path2dset
+        self.out = path2write
         self.max_synonyms = max_synonyms
         self.intent_vocab = []
         self.tag_vocab = []
+
+        self.validate_split = validate_split
 
     def write_intent_vocab(self):
         with open(os.path.join(self.path.parent, 'vocab.intent'), 'w') as file:
@@ -45,8 +45,11 @@ class DatasetBuilder:
     def augment_intent(self, slot_map, intent):
         pass
 
-        
     def build_dataset(self):
+        """
+        Translates yaml and returns pandas dataframe with it
+        or just dumps it to path
+        """
         dset = self.read_yaml()
         raw_intents, raw_entities = dset[INTENTS], dset[ENTITIES]
         self.entities_vocab = self.build_entities_vocab(raw_entities)
@@ -56,26 +59,32 @@ class DatasetBuilder:
         df = self.build_combination_sequence(processed_intents)
         length = len(df)
         print(f'{length} unique examples builded')
-        self.write_intent_vocab(); self.write_tag_vocab()
+
         # Shuffle
         df = shuffle(df).reset_index(drop=True)
 
+        if self.validate_split:
+            df, valid = train_test_split(df, test_size=0.15, random_state=42)
         if self.out:
             tp = os.path.join(self.out, 'train.csv')
             vp = os.path.join(self.out, 'valid.csv')
-            if 'vdataset' in self.path2dset:
-                df.to_csv(vp, index=False)
+            if self.validate_split:
+                df.to_csv(tp, index=False)
+                valid.to_csv(vp, index=False)
             else:
                 df.to_csv(tp, index=False)
-            # valid.to_csv(vp, index=False)
+            self.write_intent_vocab();
+            self.write_tag_vocab()
         else:
-            return train#, valid
-        
+            if self.validate_split:
+                return df, valid
+            return df, (self.intent_vocab, self.tag_vocab)
+
     def read_yaml(self):
         with open(self.path) as file:
             data = yaml.load(file, Loader=yaml.FullLoader)
         return data
-        
+
     def build_entities_vocab(self, raw_entities):
         vocab = {}
         for e in raw_entities:
@@ -83,10 +92,10 @@ class DatasetBuilder:
             for v in e['values']:
                 values.append(v[:self.max_synonyms])
             name = f"{e['type']}:{e['name']}"
-            vocab.update({name : values})
+            vocab.update({name: values})
             self.tag_vocab.append(name)
         return vocab
-    
+
     def read_slots_from_yaml(self, raw_intents):
         intents = []
         for intent_class in raw_intents:
@@ -105,7 +114,7 @@ class DatasetBuilder:
                 intent_pair = [intent_name, i, tag_map]
                 intents.append(intent_pair)
         return intents
-    
+
     def make_line(self, iclass, intent, imap):
         intent_len = len(intent.split())
         mask = ['O'] * intent_len
@@ -118,14 +127,13 @@ class DatasetBuilder:
             if slot_len > 1:
                 mask[pos] = 'B-' + slot_class
                 for i in range(1, slot_len):
-                    mask[pos+1] = 'I-' + slot_class
+                    mask[pos + 1] = 'I-' + slot_class
             else:
                 mask[pos] = 'B-' + slot_class
         text = intent.replace('(', '').replace(')', '')
         mask = ' '.join(mask)
         return (iclass, text, mask, intent_len)
-                              
-            
+
     def build_combination_sequence(self, p_intents):
         df = pd.DataFrame(columns=['intent_label', 'words', 'word_labels', 'length'])
         cnter = 0
@@ -135,10 +143,9 @@ class DatasetBuilder:
             cnter += 1
 
         return df
-            
 
-if __name__ == "__main__":
-    builder = DatasetBuilder(path2dset=args.path2dset,
-                            max_synonyms=args.max_synonyms,
-                            path2write=args.path2write)
-    builder.build_dataset()
+# if __name__ == "__main__":
+#     builder = DatasetBuilder(path2dset=args.path2dset,
+#                             max_synonyms=args.max_synonyms,
+#                             path2write=args.path2write)
+#     builder.build_dataset()

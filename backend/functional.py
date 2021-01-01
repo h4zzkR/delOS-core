@@ -3,10 +3,9 @@ import tensorflow as tf
 import datetime
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def read_config():
-    with open(os.path.join(ROOT_DIR, 'config.json')) as f:
+def read_config(config_name='config.json'):
+    with open(os.path.join(ROOT_DIR, config_name)) as f:
         data = json.load(f)
-
     return data
     
 def tf_set_memory_growth():
@@ -37,3 +36,5 @@ def jsonread(path):
 def listdir(path):
     return next(os.walk(path))[1]
 
+def to_tensorflow(input):
+    return list(map(lambda i: tf.constant(i)[None, :], input))

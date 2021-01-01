@@ -12,9 +12,6 @@ class ModuleUnit():
         self.random_state = random_state
         self.fit_params = None
 
-    def build_out_map(self, dataset):
-        pass
-
     def _load_fit_parameters(self):
         pass
 
@@ -32,6 +29,3 @@ class ModuleUnit():
 
     def fitted(self):
         pass
-
-    def get_name(self):
-        return self.model_name

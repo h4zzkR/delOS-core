@@ -23,7 +23,6 @@ import nlpaug.augmenter.char as nac
 import nlpaug.augmenter.word as naw
 import nlpaug.augmenter.sentence as nas
 import nlpaug.flow as naf
-
 from nlpaug.util import Action
 
 class IntentAug:

@@ -1,14 +1,17 @@
+
 import numpy as np
 from numpy import ndarray
 from typing import List, Dict, Tuple, Iterable, Type, Union
 import tensorflow as tf
 import torch
 from torch import nn, Tensor
-from backend.config import NLU_CONFIG
 from sentence_transformers import SentenceTransformer, models
-from ..tools.utils import encode_dataset
 
 class SentenceTransformerExtended(SentenceTransformer):
+    """
+    Расширение класса SentenceTransformer для изменения
+    возвращаемых значений
+    """
     def __init__(self, model_name_or_path: str = None, modules: Iterable[nn.Module] = None, device: str = 'cuda'):
         super().__init__(model_name_or_path, modules, device)
 
@@ -82,10 +85,9 @@ class SentenceTransformerExtended(SentenceTransformer):
 
         return all_embeddings, all_embed_sequences
 
-class SentenceFeaturizer():
-    def __init__(self):
-        # self.featurizer = SentenceTransformer(NLU_CONFIG['featurizer_model'])
-        self.featurizer = SentenceTransformerExtended(NLU_CONFIG['featurizer_model'])
+class SentenceEncoder():
+    def __init__(self, device="cuda"):
+        self.featurizer = SentenceTransformerExtended(NLU_CONFIG['featurizer_model'], device=device)
         self.max_length = NLU_CONFIG['max_seq_length']
         self.featurizer._modules['0'].max_seq_length = self.max_length
     
@@ -98,16 +100,12 @@ class SentenceFeaturizer():
     def tokenize(self, inputs):
         return np.array(self.featurizer.tokenize(inputs))
 
-    def encode_dataset(self, text_sequences):
-        token_ids = np.zeros(shape=(len(text_sequences), self.max_length), dtype=np.int32)
-        for i, text_sequence in enumerate(text_sequences):
-            encoded = self.featurizer.tokenize(text_sequence)
-            token_ids[i, 0:len(encoded)] = encoded
-        return token_ids
+    def tokenize_dataset(self, text_sequence):
+      return self.featurizer.tokenize(text_sequence)
 
-    def featurize(self, inputs):
-        seq = self.encode_dataset([inputs]).tolist()
-        # inputs = [inputs]
-        pooled_out, encoded_seq = list(map(lambda i: tf.constant(i)[None, :], \
-                                    self.featurizer.featurize(seq, convert_to_numpy=True, is_pretokenized=True)))
-        return seq, encoded_seq, pooled_out
+    def featurize(self, list_inputs, convert_to_numpy=False):
+        tokenized_seq = self.tokenize_dataset(list_inputs)
+        pooled_out, encoded_seq = self.featurizer.featurize(tokenized_seq, convert_to_numpy=convert_to_numpy, is_pretokenized=True)
+        # pooled_out, encoded_seq = list(map(lambda i: tf.constant(i)[None, :], \
+        #                             self.featurizer.featurize(seq, convert_to_numpy=True, is_pretokenized=True)))
+        return tokenized_seq, encoded_seq, pooled_out

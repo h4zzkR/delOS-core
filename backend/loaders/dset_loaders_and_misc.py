@@ -32,13 +32,6 @@ def encode_token_labels(text_sequences, slot_names, featurizer, slot_map, max_le
         encoded[i, 1:len(encoded_labels) + 1] = encoded_labels
     return encoded
 
-def encode_dataset(featurizer, text_sequences, max_length=NLU_CONFIG['max_seq_length']):
-    token_ids = np.zeros(shape=(len(text_sequences), max_length), dtype=np.int32)
-    for i, text_sequence in enumerate(text_sequences):
-        encoded = featurizer.tokenize(text_sequence)
-        token_ids[i, 0:len(encoded)] = encoded
-    return token_ids
-
 
 class DatasetLoader():
     def __init__(self, dset_intents_name, dset_tags_name=None):
@@ -153,7 +146,6 @@ def load_id2tag(dset_name):
     tag_names = Path(os.path.join(dset_tags_dir, "vocab.tag")).read_text().strip().splitlines()
     id2tag = dict((idx, label) for idx, label in enumerate(tag_names))
     return id2tag
-
 
 def load_map(self, text_vocab_path):
     """
@@ -306,36 +298,3 @@ def get_all_intents(dataset):
         for i in file.readlines():
             intents_vocab_list.append(i.replace('\n', ''))
     return intents_vocab_list
-
-# DEPRECATED
-
-def search_all_intents():
-    print(ROOT_DIR)
-    path = os.path.join(ROOT_DIR, 'data/nlu_data/')
-    dsets = next(os.walk(path))[1]
-    dsets = [d for d in dsets if '#' not in d]
-    intents_vocab_list = []
-    for directory in dsets:
-        vocab_file_path = os.path.join(path, directory, 'vocab.intent')
-        intents_vocab = open(vocab_file_path, 'r').readlines()
-        for i in intents_vocab:
-            if i not in intents_vocab_list:
-                intents_vocab_list.append(i)
-            # else:
-                print('Found dublicate of', i)
-    with open(os.path.join(ROOT_DIR, 'core/nlu/intent_manager/vocab.intent'), 'w') as file:
-        for i in intents_vocab_list:
-            if '\n' not in i:
-                i += '\n'
-            file.write(i)
-
-
-def map_all_intents():
-    ilist = get_all_intents()
-    imap = {}
-    for i in ilist:
-        imap.update({i : ['BuiltinTagger', 'DefaultTagger']})
-    dump(imap, 'core/nlu/intent_manager/taggers_map.json', indent=4, sort_keys=True)
-
-def get_intents_map():
-    return jsonread(IMAP_PATH)
