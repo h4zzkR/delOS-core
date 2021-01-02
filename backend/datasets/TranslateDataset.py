@@ -1,26 +1,66 @@
 import os
 import yaml
 import tqdm
+import argparse
 import re
 import pandas as pd
 from pathlib import Path
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
+from backend.configuration.config import INTENTS, ENTITIES, UTTERANCES, CUSTOM_NERINTENT_DSET
+import nlpaug.augmenter.char as nac
+import nlpaug.augmenter.word as naw
+import nlpaug.augmenter.sentence as nas
+import nlpaug.flow as naf
+from nlpaug.util import Action
 
-from backend.config import INTENTS, ENTITIES, UTTERANCES, CUSTOM_NERINTENT_DSET
+# Translate dataset from yaml type
+# to pandas dataframe with mapping
+
+
+class IntentAug:
+    # """
+    # Агументация intent-ов
+    # Работает не всегда предсказуемо, поэтому для аугментации тегов
+    # нужно применять что-то более умное
+    # """
+    def __init__(self, num_of_samples=2, swap=True):
+        self.num_augs_on_sentence = num_of_samples
+        self.swap_words = swap
+        self.big_augs = naf.Sequential([
+            # naw.SynonymAug(aug_src='wordnet'),
+            # naw.BackTranslationAug(
+            #     from_model_name='transformer.wmt19.en-de',
+            #     to_model_name='transformer.wmt19.de-en'
+            # )
+            naw.ContextualWordEmbsAug(model_path='bert-base-uncased', action="insert")
+        ])
+        self.small_augs = naf.Sequential([naw.SynonymAug(aug_src='wordnet')])
+        self.swap_aug = naw.RandomWordAug(action="swap")
+
+    def augment(self, example):
+        if (len(example.split()) <= 4):
+            augs = [self.small_augs.augment(example) for _ in range(self.num_augs_on_sentence)]
+        else:
+            augs = [self.big_augs.augment(example) for _ in range(self.num_augs_on_sentence)]
+            if self.swap_words:
+                augs_ = list(augs)
+                for i in augs_:
+                    for _ in range(self.num_augs_on_sentence):
+                        swapped = self.swap_aug.augment(i)
+                        augs.append(swapped)
+        return list(set(augs))
 
 
 class DatasetTranslator:
     def __init__(self, path2dset=CUSTOM_NERINTENT_DSET, max_synonyms=2, path2write=None,
-                 validate_split=True, drop_stopwords=False):
+                 validate_split=True, augment_intents=True, drop_stopwords=False):
         """
-        Make dataset from yaml format.
+        Парсит yaml датасет и сохраняет/возвращает pandas dataframe, готовый для обучения
         path2dset: FULL path to the dataset (default is custom)
         max_synonyms: check yaml custom dataset for more info
         path2write: dump translated dataset to this path (full path)
         """
-        # TODO: add synonym augmentions
-        # TODO: remove train_test split
         self.path2dset = path2dset
         self.path = path2dset
         self.out = path2write
@@ -29,21 +69,22 @@ class DatasetTranslator:
         self.tag_vocab = []
 
         self.validate_split = validate_split
+        self.augment_intents = augment_intents
+        self.intent_augmentor = IntentAug(swap=True)
+        if augment_intents:
+            print('intents will be augmented')
 
     def write_intent_vocab(self):
-        with open(os.path.join(self.path.parent, 'vocab.intent'), 'w') as file:
+        with open(os.path.join(self.out, 'vocab.intent'), 'w') as file:
             for i in self.intent_vocab:
                 file.write(i + '\n')
 
     def write_tag_vocab(self):
-        with open(os.path.join(self.path.parent, 'vocab.tag'), 'w') as file:
+        with open(os.path.join(self.out, 'vocab.tag'), 'w') as file:
             for i in self.tag_vocab:
                 file.write('B-' + i + '\n')
                 file.write('I-' + i + '\n')
             file.write('O' + '\n')
-
-    def augment_intent(self, slot_map, intent):
-        pass
 
     def build_dataset(self):
         """
@@ -115,7 +156,7 @@ class DatasetTranslator:
                 intents.append(intent_pair)
         return intents
 
-    def make_line(self, iclass, intent, imap):
+    def make_line(self, iclass, intent, imap, aug=False):
         intent_len = len(intent.split())
         mask = ['O'] * intent_len
         for key in imap:
@@ -132,16 +173,22 @@ class DatasetTranslator:
                 mask[pos] = 'B-' + slot_class
         text = intent.replace('(', '').replace(')', '')
         mask = ' '.join(mask)
-        return (iclass, text, mask, intent_len)
+        return (iclass, text, mask, intent_len, aug)
 
     def build_combination_sequence(self, p_intents):
-        df = pd.DataFrame(columns=['intent_label', 'words', 'word_labels', 'length'])
+        df = pd.DataFrame(columns=['intent_label', 'words', 'word_labels', 'length', 'aug'])
         cnter = 0
         for i in p_intents:
             intent_class, intent, map_ = i
-            df.loc[cnter] = self.make_line(intent_class, intent, map_)
+            data_line = self.make_line(intent_class, intent, map_, aug=False)
+            if (self.augment_intents):
+                # print('starting intents augmentation')
+                augmented = self.intent_augmentor.augment(data_line[1])
+                for j in range(len(augmented)):
+                    df.loc[cnter + j] = (data_line[0], augmented[j], data_line[2], len(augmented[j].split()), True)
+                cnter += len(augmented)
+            df.loc[cnter] = data_line
             cnter += 1
-
         return df
 
 # if __name__ == "__main__":

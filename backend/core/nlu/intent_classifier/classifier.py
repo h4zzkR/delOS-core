@@ -2,7 +2,6 @@ import os
 import datetime
 import numpy as np
 import pandas as pd
-import tensorflow as tf
 from tqdm import tqdm
 from pathlib import Path
 from backend.functional import elapsed_time
@@ -12,16 +11,14 @@ from backend.functional import tf_set_memory_growth
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
-from backend.config import ROOT_DIR, CLASSIFIER_DIR, NLU_CONFIG, MODELS_FIT_PARAMS
+from backend.configuration.config import ROOT_DIR, CLASSIFIER_DIR, NLU_CONFIG, MODELS_FIT_PARAMS
 from backend.core.nlu.intent_classifier.dense_model import DenseClassifierModel
 from backend.core.nlu.tools.utils import IntentsDatasetLoader as DatasetLoader
 from backend.functional import dump, jsonread
 from backend.core.nlu.featurizers.transformer_featurizer import SentenceFeaturizer
-from backend.core.nlu.tools.utils import encode_dataset, encode_token_labels, load_tags_map, load_map
 
 import nlpaug.augmenter.char as nac
 import nlpaug.augmenter.word as naw
-import nlpaug.augmenter.sentence as nas
 import nlpaug.flow as naf
 from nlpaug.util import Action
 

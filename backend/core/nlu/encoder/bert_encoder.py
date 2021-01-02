@@ -1,11 +1,18 @@
-
 import numpy as np
 from numpy import ndarray
-from typing import List, Dict, Tuple, Iterable, Type, Union
-import tensorflow as tf
+from typing import List, Iterable, Union
 import torch
 from torch import nn, Tensor
-from sentence_transformers import SentenceTransformer, models
+from sentence_transformers import SentenceTransformer
+import requests
+
+import os, json
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = ROOT_DIR[:ROOT_DIR.find('backend')]
+
+with open(os.path.join(ROOT_DIR, 'backend/configuration/config.json')) as f:
+    NLU_ENCODER_CONFIG = json.load(f)
+    NLU_ENCODER_CONFIG = NLU_ENCODER_CONFIG['encoder_core_module']
 
 class SentenceTransformerExtended(SentenceTransformer):
     """
@@ -85,10 +92,14 @@ class SentenceTransformerExtended(SentenceTransformer):
 
         return all_embeddings, all_embed_sequences
 
-class SentenceEncoder():
-    def __init__(self, device="cuda"):
-        self.featurizer = SentenceTransformerExtended(NLU_CONFIG['featurizer_model'], device=device)
-        self.max_length = NLU_CONFIG['max_seq_length']
+class SentenceEncoderService():
+    """
+    Сервер энкодера
+    """
+    def __init__(self):
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.featurizer = SentenceTransformerExtended(NLU_ENCODER_CONFIG['featurizer_model'], device="cuda")
+        self.max_length = NLU_ENCODER_CONFIG['max_seq_length']
         self.featurizer._modules['0'].max_seq_length = self.max_length
     
     def encode(self, inputs, **kwargs):
@@ -104,8 +115,45 @@ class SentenceEncoder():
       return self.featurizer.tokenize(text_sequence)
 
     def featurize(self, list_inputs, convert_to_numpy=False):
-        tokenized_seq = self.tokenize_dataset(list_inputs)
+        tokenized_seq = self.featurizer.tokenize(list_inputs)
         pooled_out, encoded_seq = self.featurizer.featurize(tokenized_seq, convert_to_numpy=convert_to_numpy, is_pretokenized=True)
         # pooled_out, encoded_seq = list(map(lambda i: tf.constant(i)[None, :], \
         #                             self.featurizer.featurize(seq, convert_to_numpy=True, is_pretokenized=True)))
-        return tokenized_seq, encoded_seq, pooled_out
+        encoded_seq = [i.tolist() for i in encoded_seq]
+        pooled_out = [i.tolist() for i in pooled_out]
+        return {'tokenized_seq': tokenized_seq, 'encoded_seq': encoded_seq, 'embeddings': pooled_out}
+
+class SentenceEncoder:
+    """
+    Клиент энкодера, адрес указывать в config.json
+    """
+    def __init__(self):
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.url = NLU_ENCODER_CONFIG["encoder_server"]
+
+    def convert(self, encoder_response):
+        # print(encoder_response)
+        tokenized = encoder_response['encoded']['tokenized_seq']
+        encoded = torch.FloatTensor(encoder_response['encoded']['encoded_seq'])
+        embeddings = torch.FloatTensor(encoder_response['encoded']['embeddings'])
+        return {'tokenized': tokenized, 'encoded': encoded, 'seq_embeddings':embeddings}
+
+    def encode(self, sequence):
+        json_response = json.dumps({"sequence": sequence})
+        headers = {'accept': 'application/json', 'content-type': 'application/json'}
+        response = requests.post(self.url + '/encode/', data=json_response, headers=headers)
+        response = json.loads(response.text)
+        return self.convert(response)
+
+
+
+if __name__ == "__main__":
+    while True:
+        int(input())
+        import datetime
+        start = datetime.datetime.now()
+        print(start)
+        st = SentenceEncoder()
+        st.encode(["wake the fuck up, samurai"])
+        # print(st.encode(["wake the fuck up, samurai"])[0])
+        print(datetime.datetime.now())

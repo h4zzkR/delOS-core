@@ -10,7 +10,7 @@ from backend.functional import tf_set_memory_growth
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from tensorflow.keras.metrics import SparseCategoricalAccuracy, Precision, Recall
-from backend.config import ROOT_DIR, TAGGER_DIR, NLU_CONFIG, MODELS_FIT_PARAMS
+from backend.configuration.config import ROOT_DIR, TAGGER_DIR, NLU_CONFIG, MODELS_FIT_PARAMS
 from backend.core.nlu.semantic_tagger.dense_model import DenseTagsExtractor
 from backend.core.nlu.tools.utils import TagsDatasetLoader as DatasetLoader
 from backend.core.nlu.featurizers.transformer_featurizer import SentenceFeaturizer

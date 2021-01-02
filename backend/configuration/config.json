@@ -1,6 +1,10 @@
 {
+  "global_config": {
+    "cuda": true
+  },
   "encoder_core_module": {
     "featurizer_model": "bert-base-nli-mean-tokens",
+    "encoder_server": "http://127.0.0.1:8000",
     "max_seq_length" : 45
   },
   "nlu_engine": {

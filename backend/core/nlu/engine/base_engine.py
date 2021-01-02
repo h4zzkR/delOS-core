@@ -1,5 +1,5 @@
 import logging, os
-from backend.config import ROOT_DIR
+from backend.configuration.config import ROOT_DIR
 logging.disable(logging.WARNING)
 
 import tensorflow as tf

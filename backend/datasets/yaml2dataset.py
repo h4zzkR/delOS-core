@@ -1,12 +1,11 @@
 import os
 import yaml
-import tqdm
 import argparse
 import re
 import pandas as pd
 from pathlib import Path
 from sklearn.utils import shuffle
-from backend.config import ROOT_DIR, INTENTS, ENTITIES, UTTERANCES
+from backend.configuration.config import ROOT_DIR, INTENTS, ENTITIES, UTTERANCES
 
 parser = argparse.ArgumentParser(
     description='Tool that combines entities and intents for building datastet from human-friendly yaml'

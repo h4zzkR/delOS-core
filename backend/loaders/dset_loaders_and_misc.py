@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 import os
-import json
 import re
 from pathlib import Path
-from backend.config import ROOT_DIR, NLU_CONFIG, IMAP_PATH
+from backend.configuration.config import ROOT_DIR, NLU_CONFIG
+
 
 # TODO: вынести некоторые функции в root_dir config.py
 
