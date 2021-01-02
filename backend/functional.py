@@ -1,13 +1,17 @@
-import os, sys, json
 # import tensorflow as tf
 import datetime
+import json
+import os
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def read_config(config_name='configuration/config.json'):
     with open(os.path.join(ROOT_DIR, config_name)) as f:
         data = json.load(f)
     return data
-    
+
+
 # def tf_set_memory_growth():
 #     gpus = tf.config.experimental.list_physical_devices('GPU')
 #     if gpus:
@@ -22,16 +26,19 @@ def elapsed_time(start):
     time = now - start
     return time.seconds
 
+
 def dump(dictionary, path, **kwargs):
     if ROOT_DIR not in path:
         path = os.path.join(ROOT_DIR, path)
     with open(path, 'w') as outfile:
         json.dump(dictionary, outfile, **kwargs)
 
+
 def jsonread(path):
     with open(path, "r") as read_file:
         data = json.load(read_file)
     return data
+
 
 def listdir(path):
     return next(os.walk(path))[1]

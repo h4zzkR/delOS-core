@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 from backend.functional import read_config
 
 # DIR&PATH
