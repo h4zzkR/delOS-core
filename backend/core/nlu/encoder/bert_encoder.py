@@ -97,7 +97,7 @@ class SentenceTransformerExtended(SentenceTransformer):
         return all_embeddings, all_embed_sequences
 
 
-class SentenceEncoderService():
+class SentenceEncoderService:
     """
     Сервер энкодера
     """
@@ -120,14 +120,17 @@ class SentenceEncoderService():
     def tokenize_dataset(self, text_sequence):
         return self.featurizer.tokenize(text_sequence)
 
-    def featurize(self, list_inputs, convert_to_numpy=False):
+    def featurize(self, list_inputs, just_embeddings, convert_to_numpy=False):
+        # tokenized: sequence as sequence of int tokens, encoded: encoded tokens, pooled: embedding
         tokenized = self.featurizer.tokenize(list_inputs)
         pooled_out, encoded_seq = self.featurizer.featurize(tokenized, convert_to_numpy=convert_to_numpy,
                                                             is_pretokenized=True)
         # pooled_out, encoded_seq = list(map(lambda i: tf.constant(i)[None, :], \
         #                             self.featurizer.featurize(seq, convert_to_numpy=True, is_pretokenized=True)))
-        encoded_seq = [i.tolist() for i in encoded_seq]
         pooled_out = [i.tolist() for i in pooled_out]
+        if just_embeddings is True:
+            return {'tokenized': tokenized, 'encoded': None, 'embeddings': pooled_out}
+        encoded_seq = [i.tolist() for i in encoded_seq]
         return {'tokenized': tokenized, 'encoded': encoded_seq, 'embeddings': pooled_out}
 
 
@@ -139,20 +142,30 @@ class SentenceEncoder:
     def __init__(self):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.url = NLU_ENCODER_CONFIG["encoder_server"]
+        self.emb_dim = 768 # requests encoder_info
 
-    def convert(self, encoder_response):
-        # print(encoder_response)
+    def convert(self, encoder_response, just_embeddings):
         tokenized = encoder_response['encoded']['tokenized']
-        encoded = torch.FloatTensor(encoder_response['encoded']['encoded'])
         embeddings = torch.FloatTensor(encoder_response['encoded']['embeddings'])
-        return {'tokenized': tokenized, 'encoded': encoded, 'seq_embeddings': embeddings}
+        if just_embeddings is True:
+            return {'tokenized': tokenized, 'encoded': None, 'embeddings': embeddings}
+        encoded = torch.FloatTensor(encoder_response['encoded']['encoded'])
+        return {'tokenized': tokenized, 'encoded': encoded, 'embeddings': embeddings}
 
-    def encode(self, sequence):
+    def encode(self, sequence, just_embeddings=True):
+        """
+        just_embeddings: вернуть только tokenized и сами embeddings, без encoded
+        """
         json_response = json.dumps({"sequence": sequence})
         headers = {'accept': 'application/json', 'content-type': 'application/json'}
-        response = requests.post(self.url + '/encode/', data=json_response, headers=headers)
-        response = json.loads(response.text)
-        return self.convert(response)
+        try:
+            param = 'true' if just_embeddings is True else 'false'
+            response = requests.post(self.url + f'/encode/?just_embeddings={param}',
+                                     data=json_response, headers=headers)
+            response = json.loads(response.text)
+            return self.convert(response, just_embeddings)
+        except ConnectionRefusedError:
+            print("Encoder server is inaccessible")
 
 
 if __name__ == "__main__":
@@ -163,5 +176,5 @@ if __name__ == "__main__":
         start = datetime.datetime.now()
         print(start)
         st = SentenceEncoder()
-        print(st.encode(["wake the fuck up, samurai"])['encoded'])
+        print(st.encode(["wake the fuck up, samurai"])['embeddings'])
         print(datetime.datetime.now())

@@ -2,6 +2,7 @@
 import datetime
 import json
 import os
+import yaml
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -39,9 +40,13 @@ def jsonread(path):
         data = json.load(read_file)
     return data
 
-
 def listdir(path):
-    return next(os.walk(path))[1]
+    return next(os.walk(path))[1:]
+
+def read_yaml(path):
+    with open(path) as file:
+        data = yaml.load(file, Loader=yaml.FullLoader)
+    return data
 
 # def to_tensorflow(input):
 #     return list(map(lambda i: tf.constant(i)[None, :], input))

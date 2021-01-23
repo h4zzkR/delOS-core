@@ -1,37 +1,20 @@
-from .base_model import BaseClassifierModel
-import tensorflow as tf
-from backend.core.nlu.featurizers.transformer_featurizer import SentenceFeaturizer
-from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling1D
-from tensorflow.keras.activations import softmax
+import torch.nn as nn
+import torch.nn.functional as F
 
-
-class DenseClassifierModel(BaseClassifierModel):
-
-    def __init__(self, intent_num_labels=None, dropout_prob=0.15, from_logits=True):
+class DenseClassifierModel(nn.Module):
+    """
+    Simple network for intent classification
+    """
+    def __init__(self, embedding_dim=768, intent_num_labels=2, dropout_prob=0.15, from_logits=True):
         super().__init__()
         self.from_logits = from_logits
-        self.dropout = Dropout(dropout_prob)
-        self.intent_classifier = Dense(intent_num_labels)
+        self.dropout = nn.Dropout(dropout_prob)
+        self.classifier = nn.Linear(embedding_dim, intent_num_labels)
+        self.act = F.softmax
 
-    def call(self, ft_inputs, **kwargs):
-        ft_inputs = self.dropout(ft_inputs)
-        out = self.intent_classifier(ft_inputs)
+    def forward(self, x):
+        inputs = self.dropout(x)
+        inputs = self.classifier(inputs)
         if not self.from_logits:
-            out = softmax(out)
-        return out
-
-# class DenseClassifierTorchModel(nn.Module):
-#     def __init__(self, intent_num_labels=None, dropout_prob=0.15, from_logits=True):
-#         super(self).__init__()
-#         self.drop = nn.Dropout(0.2)
-#         self.out = nn.Linear(128, 10)
-#         self.act = nn.ReLU()
-
-#     def forward(self, x):
-#         x = self.act(self.conv(x)) # [batch_size, 28, 26, 26]
-#         x = self.pool(x) # [batch_size, 28, 13, 13]
-#         x = x.view(x.size(0), -1) # [batch_size, 28*13*13=4732]
-#         x = self.act(self.hidden(x)) # [batch_size, 128]
-#         x = self.drop(x)
-#         x = self.out(x) # [batch_size, 10]
-#         return x
+            inputs = self.act(inputs)
+        return inputs

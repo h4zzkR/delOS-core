@@ -1,0 +1,61 @@
+skill_label,intent_label,words,word_labels,length,aug
+light_control,turnLightOff,turn off light in {location},None,5,False
+light_control,turnLightOff,turn off illumintation in {location},None,5,False
+light_control,turnLightOff,shutdown light in {location},None,4,False
+light_control,turnLightOff,shutdown illumintation in {location},None,4,False
+light_control,turnLightOff,switch off light in {location},None,5,False
+light_control,turnLightOff,switch off illumintation in {location},None,5,False
+light_control,turnLightOff,turn down light in {location},None,5,False
+light_control,turnLightOff,turn down illumintation in {location},None,5,False
+light_control,turnLightOff,disable light in {location},None,4,False
+light_control,turnLightOff,disable illumintation in {location},None,4,False
+light_control,turnLightOff,off light in {location},None,4,False
+light_control,turnLightOff,off illumintation in {location},None,4,False
+light_control,turnLightOff,turn off {location} light,None,4,False
+light_control,turnLightOff,turn off {location} illumintation,None,4,False
+light_control,turnLightOff,shutdown {location} light,None,3,False
+light_control,turnLightOff,shutdown {location} illumintation,None,3,False
+light_control,turnLightOff,switch off {location} light,None,4,False
+light_control,turnLightOff,switch off {location} illumintation,None,4,False
+light_control,turnLightOff,turn down {location} light,None,4,False
+light_control,turnLightOff,turn down {location} illumintation,None,4,False
+light_control,turnLightOff,disable {location} light,None,3,False
+light_control,turnLightOff,disable {location} illumintation,None,3,False
+light_control,turnLightOff,off {location} light,None,3,False
+light_control,turnLightOff,off {location} illumintation,None,3,False
+light_control,turnLightOff,turn off light,None,3,False
+light_control,turnLightOff,turn off illumintation,None,3,False
+light_control,turnLightOff,shutdown light,None,2,False
+light_control,turnLightOff,shutdown illumintation,None,2,False
+light_control,turnLightOff,switch off light,None,3,False
+light_control,turnLightOff,switch off illumintation,None,3,False
+light_control,turnLightOff,turn down light,None,3,False
+light_control,turnLightOff,turn down illumintation,None,3,False
+light_control,turnLightOff,disable light,None,2,False
+light_control,turnLightOff,disable illumintation,None,2,False
+light_control,turnLightOff,off light,None,2,False
+light_control,turnLightOff,off illumintation,None,2,False
+light_control,turnLightOn,turn on light in {location},None,5,False
+light_control,turnLightOn,turn on illumintation in {location},None,5,False
+light_control,turnLightOn,enable light in {location},None,4,False
+light_control,turnLightOn,enable illumintation in {location},None,4,False
+light_control,turnLightOn,switch on light in {location},None,5,False
+light_control,turnLightOn,switch on illumintation in {location},None,5,False
+light_control,turnLightOn,on light in {location},None,4,False
+light_control,turnLightOn,on illumintation in {location},None,4,False
+light_control,turnLightOn,turn on {location} light,None,4,False
+light_control,turnLightOn,turn on {location} illumintation,None,4,False
+light_control,turnLightOn,enable {location} light,None,3,False
+light_control,turnLightOn,enable {location} illumintation,None,3,False
+light_control,turnLightOn,switch on {location} light,None,4,False
+light_control,turnLightOn,switch on {location} illumintation,None,4,False
+light_control,turnLightOn,on {location} light,None,3,False
+light_control,turnLightOn,on {location} illumintation,None,3,False
+light_control,turnLightOn,turn on light,None,3,False
+light_control,turnLightOn,turn on illumintation,None,3,False
+light_control,turnLightOn,enable light,None,2,False
+light_control,turnLightOn,enable illumintation,None,2,False
+light_control,turnLightOn,switch on light,None,3,False
+light_control,turnLightOn,switch on illumintation,None,3,False
+light_control,turnLightOn,on light,None,2,False
+light_control,turnLightOn,on illumintation,None,2,False

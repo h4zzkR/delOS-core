@@ -1,0 +1,38 @@
+---
+# Базовый навык-пример
+# в фигурных скобках - замена слова
+# в круглых скобках возможно перечисление через |
+# в квадратных - название entity и сам entity
+
+intents:
+  - type: intent
+    name: turnLightOff
+    utterances:
+      - (turn off | shutdown | switch off | turn down | disable | off) (light | illumintation) in {location}
+      - (turn off | shutdown | switch off | turn down | disable | off) {location} (light | illumintation)
+      - (turn off | shutdown | switch off | turn down | disable | off) (light | illumintation)
+
+  - type: intent
+    name: turnLightOn
+    utterances:
+      - (turn on | enable | switch on | on) (light | illumintation) in {location}
+      - (turn on | enable | switch on | on) {location} (light | illumintation)
+      - (turn on | enable | switch on | on) (light | illumintation)
+
+entities:
+  - ignore: true
+  - name: [turnLightOff, turnLightOn]
+  - type: location
+    values:
+      - kitchen
+      - stairs
+      - garage
+      - [toilet, lavatory, restroom, loo]
+      - [bedroom, sleeping room]
+      - [dining room, cafeteria]
+      - [office, parlor, study room]
+      - [basement, cellar]
+      - [hall, hallway, corridor]
+      - [attic, loft, garret]
+      - [lounge, living room, salon]
+      - [house, home]

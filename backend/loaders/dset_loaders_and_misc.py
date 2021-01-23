@@ -53,7 +53,7 @@ class DatasetLoader():
     def load_intents_map(self, dset_name=None):
         if dset_name is not None:
             self.dset_intents_dir = os.path.join(ROOT_DIR, dset_name)
-        intent_names = Path(os.path.join(self.dset_intents_dir, "vocab.intent")).read_text().split()
+        intent_names = Path(os.path.join(self.dset_intents_dir, "locale.intent")).read_text().split()
         intent2id = dict((label, idx) for idx, label in enumerate(intent_names))
         id2intent = {intent2id[i] : i for i in intent2id.keys()}
         return intent2id, id2intent
@@ -61,7 +61,7 @@ class DatasetLoader():
     def load_tags_map(self, dset_name=None):
         if dset_name is not None:
             self.dset_tags_dir = os.path.join(ROOT_DIR, dset_name)
-        tag_names = Path(os.path.join(self.dset_tags_dir, "vocab.tag")).read_text().strip().splitlines()
+        tag_names = Path(os.path.join(self.dset_tags_dir, "locale.tag")).read_text().strip().splitlines()
         tag2id = dict((label, idx) for idx, label in enumerate(tag_names))
         id2tag = {tag2id[i] : i for i in tag2id.keys()}
         return tag2id, id2tag
@@ -136,20 +136,20 @@ def load_tags_map(tags_dset_name):
 def load_id2intent(dset_name):
     if dset_name is not None:
         dset_intents_dir = os.path.join(ROOT_DIR, dset_name)
-    intent_names = Path(os.path.join(dset_intents_dir, "vocab.intent")).read_text().split()
+    intent_names = Path(os.path.join(dset_intents_dir, "locale.intent")).read_text().split()
     id2intent = dict((idx, label) for idx, label in enumerate(intent_names))
     return id2intent
 
 def load_id2tag(dset_name):
     if dset_name is not None:
         dset_tags_dir = os.path.join(ROOT_DIR, dset_name)
-    tag_names = Path(os.path.join(dset_tags_dir, "vocab.tag")).read_text().strip().splitlines()
+    tag_names = Path(os.path.join(dset_tags_dir, "locale.tag")).read_text().strip().splitlines()
     id2tag = dict((idx, label) for idx, label in enumerate(tag_names))
     return id2tag
 
 def load_map(self, text_vocab_path):
     """
-    Path to the vocab.__entity_name__
+    Path to the locale.__entity_name__
     This file located at dataset dir
     """
     if dset_name is not None:
@@ -274,7 +274,7 @@ class DatasetsTools():
                 tag_by_intents[intent][tag_name] = list(set(tag_by_intents[intent][tag_name]))
         tag_by_intents
     
-    def dataset2yaml(self, from_path, to_path='data/nlu_data/custom/dataset.yaml'):
+    def dataset2yaml(self, from_path, to_path='data/nlu_data/standard/dataset.yaml'):
         from_path = os.path.join(ROOT_DIR, from_path)
         yaml_path = os.path.join(ROOT_DIR, to_path)
         file = open(yaml_path)
@@ -293,7 +293,7 @@ class DatasetsTools():
 
 def get_all_intents(dataset):
     intents_vocab_list = []
-    dataset = os.path.join(ROOT_DIR, dataset, 'vocab.intent')
+    dataset = os.path.join(ROOT_DIR, dataset, 'locale.intent')
     with open(dataset, 'r') as file:
         for i in file.readlines():
             intents_vocab_list.append(i.replace('\n', ''))

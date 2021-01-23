@@ -10,8 +10,8 @@ from backend.configuration.config import ROOT_DIR, INTENTS, ENTITIES, UTTERANCES
 parser = argparse.ArgumentParser(
     description='Tool that combines entities and intents for building datastet from human-friendly yaml'
     )
-parser.add_argument('--path2dset', type=str, default='data/nlu_data/custom/dataset.yaml')
-parser.add_argument('--path2write', type=str, default='data/nlu_data/custom/')
+parser.add_argument('--path2dset', type=str, default='data/nlu_data/standard/dataset.yaml')
+parser.add_argument('--path2write', type=str, default='data/nlu_data/standard/')
 parser.add_argument('--max_synonyms', type=int, default=-1, help='Set the maximum of synonym numbers for one intent template')
 parser.add_argument("--rebuild_dataset", default=False, action="store_true")
 
@@ -29,12 +29,12 @@ class DatasetBuilder:
         self.tag_vocab = []
 
     def write_intent_vocab(self):
-        with open(os.path.join(self.path.parent, 'vocab.intent'), 'w') as file:
+        with open(os.path.join(self.path.parent, 'locale.intent'), 'w') as file:
             for i in self.intent_vocab:
                 file.write(i + '\n')
 
     def write_tag_vocab(self):
-        with open(os.path.join(self.path.parent, 'vocab.tag'), 'w') as file:
+        with open(os.path.join(self.path.parent, 'locale.tag'), 'w') as file:
             for i in self.tag_vocab:
                 file.write('B-' + i + '\n')
                 file.write('I-' + i + '\n')

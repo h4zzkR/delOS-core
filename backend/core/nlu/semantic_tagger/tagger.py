@@ -48,7 +48,7 @@ class SemanticTagger(ModuleUnit):
             m = ckp.splitlines()[0].split(': ')[-1]
             self.fit_params = jsonread(os.path.join(checkpoint_path , 'params.json'))
             checkpoint_path = os.path.join(checkpoint_path, m[1:-1])
-            # _, self.id2tag = load_map(os.path.join(self.fit_params["dataset_name"], 'vocab.tag'))
+            # _, self.id2tag = load_map(os.path.join(self.fit_params["dataset_name"], 'locale.tag'))
 
             self.model = self._load_base_model(self.fit_params["output_length"])
             self.model.load_weights(checkpoint_path)
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     obj.fit('data/nlu_data/snipsai', 'snipsai')
     # obj.load('turnLightOn')
 
-    # d = DatasetLoader('data/nlu_data/custom')
+    # d = DatasetLoader('data/nlu_data/standard')
     # df_train, intent2id, id2intent, tag2id, id2tag = d.load_prepare_dataset()
     # ft = SentenceFeaturizer()
 

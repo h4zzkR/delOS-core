@@ -1,7 +1,6 @@
 ---
 intents:
   - type: intent
-    task: train
     name: turnLightOff
     utterances:
       - turn off the [location:room](bathroom) lights
@@ -41,7 +40,6 @@ intents:
       - power off lights please
 
   - type: intent
-    task: train
     name: turnLightOn
     utterances:
       - turn on the [location:room](bathroom) light
@@ -83,7 +81,6 @@ entities:
 # turnOffLight Entity
   - type: location
     name: room
-    task: train
     values:
       - kitchen
       - stairs
@@ -101,7 +98,6 @@ entities:
 # turnOffLight Entity
   - type: location
     name: where
-    task: train
     replace_synonyms: True
     values:
       - downstairs
@@ -110,7 +106,6 @@ entities:
       - [next door, near room]
 
   - type: location
-    task: train
     name: current
     values:
       - here

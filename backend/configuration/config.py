@@ -1,5 +1,8 @@
 import os
+import torch
 from backend.functional import read_config
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # DIR&PATH
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -14,12 +17,15 @@ CONFIG = read_config()
 
 CUDA = CONFIG['global_config']['cuda']
 
-DATA_PATH = os.path.join(ROOT_DIR, '../datasets')
-CUSTOM_NERINTENT_DSET = os.path.join(DATA_PATH, "nlu_data/custom/dataset.yaml")
+FS_PATH = os.path.join(ROOT_DIR, '../filesystem')
+DATA_PATH = os.path.join(FS_PATH, 'datasets')
+SKILLS_PATH = os.path.join(FS_PATH, 'skills')
 
 PACKAGE_NAME = "delOS"
 
 NLU_ENCODER_CONFIG = CONFIG['encoder_core_module']
+NLU_INTENTS_CONFIG = CONFIG['intent_classifier_core_module']
+
 NLU_ENGINE_CONFIG = CONFIG['nlu_engine']
 NER_CONFIG = CONFIG['ner_engine']
 

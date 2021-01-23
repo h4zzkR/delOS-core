@@ -1,18 +1,30 @@
 {
   "global_config": {
-    "cuda": true
+    "cuda": true,
+    "language": "en-us"
   },
   "encoder_core_module": {
     "featurizer_model": "bert-base-nli-mean-tokens",
     "encoder_server": "http://127.0.0.1:8000",
     "max_seq_length" : 45
   },
+  "intent_classifier_core_module": {
+    "train_batch_size": 16,
+    "train_learning_rate": 0.01,
+    "train_validate_prob": 0.3,
+    "train_dropout_prob": 0.15,
+    "train_num_epochs": 5
+  },
+
+
+
+
   "nlu_engine": {
     "featurizer_model": "bert-base-nli-mean-tokens",
     "classifier_model": "core/nlu/intent_classifier/model/classifier",
     "semantic_tagger_base_model" : "dense",
     "intent_classifier_base_model" : "dense",
-    "intents_classificier_dataset": "data/nlu_data/custom",
+    "intents_classificier_dataset": "data/nlu_data/standard",
     "max_seq_length" : 45,
     "universal_dataset": "data/nlu_data/custom",
     "text_processor" : "core/text_processors/default"
